@@ -24,7 +24,7 @@ router.post('/',
                             return res.status(400).json({ errors: errors.array() });
                               }
 
-    const {name, email , password, date} = req.body;
+    const {name, email , password, CreatedAt} = req.body;
 
      try{
 //if user exist
@@ -46,13 +46,13 @@ user = new User({
     email,
     avatar,
     password,
-    date
+    CreatedAt
 })
 
 //encrypt password
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
-    user.date = Date.now();
+    user.CreatedAt = Date.now();
         await user.save();
 //jwt classrroom
 exports.login = (req, res, next) => {
