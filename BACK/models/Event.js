@@ -15,8 +15,7 @@ const EventSchema = new mongoose.Schema({
         required : true
     }, 
     Startdate:{
-        type:Date,
-        default:Date.now
+        type:Date, 
     },
     CreatedAt:{
         type:Date,
@@ -27,8 +26,7 @@ const EventSchema = new mongoose.Schema({
         default:Date.now
     },
     Enddate:{
-        type:Date,
-        default:Date.now
+        type:Date, 
     },
     
     user: [{ type: mongoose.Schema.Types.ObjectId, ref : "User"}],
