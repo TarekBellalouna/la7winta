@@ -3,8 +3,7 @@ const mongoose = require('mongoose');
 const DonationSchema = new mongoose.Schema({
 
     title: {type: String, required: [true, "can't be blank"]},
-    picture: 
-    {   type: picture},
+
 
    
     user: [{ type: mongoose.Schema.Types.ObjectId, ref : "User"}] ,
