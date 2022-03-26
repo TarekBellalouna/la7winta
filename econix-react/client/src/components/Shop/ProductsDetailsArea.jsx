@@ -189,14 +189,19 @@ function ProductsDetailsArea() {
         console.log(tot)
         setnbTotStar(tot)
         console.log(fivestar)
-       console.log(nbTotStar)
-       console.log(nbRate)
-        // for (let i = 0; i<Math.round(nbTotStar/nbRate); i++)
-        // {
-        //   console.log(i)
-        //   moyStar[i]=i
-        // }
-       // setRatingAff(res.data.rating);
+       let rate=0
+       if(nbRate<res.data.rating.length)
+       {
+          rate=res.data.rating.length
+       }
+       else rate=nbRate
+       console.log(rate)
+        for (let i = 0; i<Math.round(tot/rate); i++)
+        {
+          console.log(i)
+          moyStar[i]=i
+        }
+      // setRatingAff(res.data.rating);
       })
       .catch((err) => console.log(err));
   }, []);
