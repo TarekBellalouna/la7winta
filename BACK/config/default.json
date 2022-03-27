@@ -1,3 +1,0 @@
-{ "mongoURI":"mongodb+srv://nour:25225114@la7winta.geegs.mongodb.net/la7winta?retryWrites=true&w=majority"
-,
-"jwtSecret" : "mysecrettoken"}
