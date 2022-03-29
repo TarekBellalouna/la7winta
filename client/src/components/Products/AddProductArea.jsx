@@ -15,17 +15,31 @@ function AddProductArea() {
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState({});
   const [brandsList, setBrandsList] = useState([]);
-
+  const [catList, setCatList] = useState([]);
+  
+  // const getCat = async  () => {
+  //   const {dataCat} = await axios.get(`http://127.0.0.1:5000/category/`)
+  //  console.log(dataCat)
+  //       setCatList(dataCat)
+  // }
   useEffect( async()=>{
+    const getData = async() => { 
+      const {data} = await axios.get(`http://127.0.0.1:5000/category`)
+    console.log(data)
+    setCatList(data)
+     }
+     getData() 
+
    const {data} = await axios.get(`http://127.0.0.1:5000/brand/`)
-   console.log(data)
-      setBrandsList(data)
+         setBrandsList(data)
+    console.log(data)
   },[])
 
 
   const handleAddProduct = (e) => {
     e.preventDefault();
     const formData = new FormData();
+    formData.append("user", "6240d2511f6d0f3694bb9fb3");
     formData.append("product_name", product_name);
     formData.append("product_description", product_description);
     formData.append("image", product_image);
@@ -116,7 +130,7 @@ function AddProductArea() {
                 value={product_gender}
                 onChange={(e) => setProductGender(e.target.value)}
               >
-                <option>Gender</option>
+                <option value={null}>Gender</option>
                 <option value="man">Man</option>
                 <option value="woman">Woman</option>
                 <option value="kids">Kids</option>
@@ -131,7 +145,7 @@ function AddProductArea() {
                 value={product_brand}
                 onChange={(e) => setProductBrand(e.target.value)}
               >
-                <option>Brand</option>
+                <option value={null}>Brand</option>
                 {brandsList && brandsList.map(brand =><option key={brand._id} value={brand._id}>{brand.name}</option>)}
                 
                 
@@ -146,17 +160,10 @@ function AddProductArea() {
                 value={product_type}
                 onChange={(e) => setProductType(e.target.value)}
               >
-                <option>All Type</option>
-                <option value="accessories">Accessories</option>
-                <option value="audio">Audio</option>
-                <option value="beauty_picks">Beauty Picks</option>
-                <option value="cameras">Cameras</option>
-                <option value="computers">Computers</option>
-                <option value="electronics">Electronics</option>
-                <option value="laptop">Laptop</option>
-                <option value="mobile">Mobile</option>
-                <option value="watches">Watches</option>
-                <option value="headphone">Headphone</option>
+                <option value={null}>All Type</option>
+               {/* {catList?.map(cat=> (<option value={cat.name}>{cat.name}</option>))}  */}
+               {catList && catList.map(cat =><option key={cat._id} value={cat.name}>{cat.name}</option>)}
+                
               </select>
               {product_type === '' && <p className="error_color">{errors.product_type}</p>}
             </div>

@@ -1,14 +1,12 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require('path');
-//const fileUpload = require("express-fileupload");
 const db = require("./config/db");
 const productRoutes = require("./routings/product");
 const userRoutes = require("./routings/user");
 const brandRoutes = require("./routings/brand")
 const categoryRoutes = require("./routings/category")
 const orderRoutes = require("./routings/order");
-const { cloudinary } = require("./utils/cloudinary");
 
 
 const production = process.env.NODE_ENV === "production";
@@ -21,13 +19,11 @@ app.use(express.json())
 
 production && app.use(express.static(path.join(__dirname, "../client/build")));
 
+// app.use('/uploads',express.static('uploads'))
 app.use('/uploads',express.static('uploads'))
-
 app.use(cors())
 
-//app.use(formidable());
 app.use(express.urlencoded({ extended: true }));
-//app.use(fileUpload());
 
 // database connection
 db.makeDb();

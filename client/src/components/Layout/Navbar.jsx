@@ -1,9 +1,11 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { Link, NavLink, useLocation, useHistory } from "react-router-dom";
-
+import {listProducts} from '../../redux/Product/ProductAction'
+import {useDispatch,useSelector} from 'react-redux'
 import logo2 from "../../assets/img/logo-2.png";
 import AuthContext from "../../contexts/auth-context";
+import {addParams} from '../../redux/search/searchActions.js'
 
 const homeRoutes = ["/", "/home-two", "/home-three", "/home-four"];
 const pagesRoutes = [
@@ -43,15 +45,21 @@ const blogRoutes = [
   "/blog-details",
 ];
 const productsRoutes = ["/products", "/add-product"];
-
 function Navbar() {
   const [user, setUser] = useState({});
   const [visible, setVisible] = useState(false);
   const { pathname } = useLocation();
   const context = useContext(AuthContext);
+  const dispatch = useDispatch()
   const history = useHistory();
   const [active, setActive] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [brandList,setBrandList] = useState([])
+  const search = useSelector(state=>state.search)
+   const handleOption = (brand) => { 
+    dispatch(listProducts(search.keyword,search.pageNumber,search.sortBy,search.searchByCat,brand));
+    dispatch(addParams(search.keyword,search.pageNumber,search.sortBy,search.searchByCat,brand))
+   }
 
   useEffect(() => {
     if (context && context.userId) {
@@ -64,6 +72,12 @@ function Navbar() {
           console.log(err);
         });
     }
+    const getData = async() => { 
+      const {data} = await axios.get(`http://127.0.0.1:5000/brand`)
+    console.log(data)
+    setBrandList(data)
+     }
+     getData()
   }, [context]);
 
   const toggleHotline = () => {
@@ -109,75 +123,14 @@ function Navbar() {
                       All Categories
                     </a>
                     <ul className="dropdown-menu">
-                      <li className="nav-item">
-                        <Link to="/shop/camera" className="nav-link">
-                          <i className="flaticon-camera"></i>
-                          Cameras
-                        </Link>
-                      </li>
-
-                      <li className="nav-item">
-                        <Link to="/shop/speaker" className="nav-link">
-                          <i className="flaticon-stereo"></i>
-                          Audio
-                        </Link>
-                      </li>
-
-                      <li className="nav-item">
-                        <Link to="/shop/tv" className="nav-link">
-                          <i className="flaticon-tv-box"></i>
-                          TV
-                        </Link>
-                      </li>
-
-                      <li className="nav-item">
-                        <Link to="/shop/phone" className="nav-link">
-                          <i className="flaticon-smartphone"></i>
-                          Mobiles
-                        </Link>
-                      </li>
-
-                      <li className="nav-item">
-                        <Link to="/shop/headphone" className="nav-link">
-                          <i className="flaticon-headphones"></i>
-                          Headphone
-                        </Link>
-                      </li>
-
-                      <li className="nav-item">
-                        <Link to="/shop/watch" className="nav-link">
-                          <i className="flaticon-smart-watch"></i>
-                          Watches
-                        </Link>
-                      </li>
-
-                      <li className="nav-item">
-                        <Link to="/shop/computer" className="nav-link">
-                          <i className="flaticon-desktop-computer"></i>
-                          Computers
-                        </Link>
-                      </li>
-
-                      <li className="nav-item">
-                        <Link to="/shop/computer" className="nav-link">
-                          <i className="flaticon-laptop"></i>
-                          Laptop
-                        </Link>
-                      </li>
-
-                      <li className="nav-item">
-                        <Link to="/shop/battery" className="nav-link">
-                          <i className="flaticon-battery-charge"></i>
-                          Battery
-                        </Link>
-                      </li>
-
-                      <li className="nav-item">
-                        <Link to="/shop/accesories" className="nav-link">
-                          <i className="flaticon-trimmer"></i>
-                          Accessories
-                        </Link>
-                      </li>
+                      {brandList?.map(brand=>(
+                         <li className="nav-item d-flex align-content-center w-4 ">
+                         <Link to={`/shop/#`} onClick={()=>handleOption(brand.name)} className="nav-link">
+                           <img src={brand.image} width="20" height="20" alt='rand'/>
+                           {brand.name}
+                         </Link>
+                       </li>
+                      ))}
                     </ul>
                   </li>
                 </ul>

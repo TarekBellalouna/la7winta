@@ -39,7 +39,7 @@ function Products() {
     formData.append("image", prod_image);
 
     axios
-      .post("http://127.0.0.1:5000/products/edit-product/", formData, {
+      .put("http://127.0.0.1:5000/products/edit-product/", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

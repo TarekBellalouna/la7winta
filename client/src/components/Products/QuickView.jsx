@@ -46,7 +46,7 @@ function QuickView({ isOpen, closeModal, product }) {
               </div>
 
               <div className="price">
-                <span className="old-price">$150.00</span>
+               {product.discount ? <span className="old-price">{product.price-(product.price*product.discount)+"DT"}</span>: ""}
                 <span className="new-price">${product.price}</span>
               </div>
 

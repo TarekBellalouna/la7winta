@@ -1,16 +1,37 @@
-import { useState, useContext } from "react";
+import { useState,useEffect, useContext } from "react";
 import { Link, withRouter } from "react-router-dom";
+import {useDispatch,useSelector} from 'react-redux'
+import {listProducts} from '../../redux/Product/ProductAction'
+import {useParams} from 'react-router-dom'
+import {addParams} from '../../redux/search/searchActions.js'
+import axios from 'axios'
 
 import CartContext from "../../contexts/cart-context";
 import AuthContext from "../../contexts/auth-context";
 import logo from "../../assets/img/logo.png";
 import "./MiddleHeader.scss";
 
-function MiddleHeader({ history }) {
+function MiddleHeader({ history,location }) {
   const context = useContext(CartContext);
   const Aucontext = useContext(AuthContext);
+  const dispatch = useDispatch()
   const [keyword, setKeyword] = useState("");
-
+  const [catList,setCatList] = useState([])
+  useEffect( ()=>{
+    const getData = async() => { 
+      const {data} = await axios.get(`http://127.0.0.1:5000/category`)
+    console.log(data)
+    setCatList(data)
+     }
+     getData()
+   },[])
+   const search = useSelector(state=>state.search)
+   const handleOption = (cat) => { 
+     const params = location.pathname.split('/')[2]
+     console.log(params)
+    dispatch(listProducts(params,search.pageNumber,search.sortBy,cat,search.searchByBrand));
+    dispatch(addParams(params, search.pageNumber,search.sortBy,cat,search.searchByBrand))
+   }
   const submitHandler = (e) => {
     e.preventDefault();
     if (keyword.trim()) {
@@ -19,7 +40,7 @@ function MiddleHeader({ history }) {
       history.push("/");
     }
   };
-
+ 
   
   return (
     <div className="middle-header-area">
@@ -38,24 +59,17 @@ function MiddleHeader({ history }) {
               <form onSubmit={submitHandler}>
                 <div className="row align-items-center">
                   <div className="col-md-4 select-column">
-                    <div className="form-group">
-                      <select className="form-control list">
-                        <option>All Category</option> 
-                        <option value="1">Computers</option>
-                        <option value="2">Audio</option>
-                        <option value="2">Home Theater</option>
-                        <option value="3">Laptop</option>
-                        <option value="3">TV</option>
-                        <option value="3">Mobiles</option>
-                        <option value="3">Tablets</option>
-                        <option value="3">Headphone</option>
-                        <option value="3">Earphone</option>
-                        <option value="3">Battery</option>
-                        <option value="3">Watches</option>
-                        <option value="3">Cameras</option>
-                        <option value="3">Accessories</option>
-                      </select>
-                    </div>
+                  <div className="form-group">
+                    <select
+                      className="form-control"
+                      onChange={(e) => handleOption(e.target.value)}
+                    >
+                      <option value=''>Category</option>
+                      {catList && catList.map(cat =><option key={cat._id} value={cat.name}>{cat.name}</option>)}
+                      
+                      
+                    </select>
+                  </div>
                   </div>
 
                   <div className="col-md-8">

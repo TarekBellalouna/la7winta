@@ -1,15 +1,24 @@
 import { Link } from "react-router-dom";
 import { Image } from "cloudinary-react";
 import React , {useState,useEffect} from 'react';
+import {useDispatch,useSelector} from 'react-redux'
+import {listProducts} from '../../redux/Product/ProductAction'
+import {addParams} from '../../redux/search/searchActions.js'
 import axios from "axios";
 
 function ShopArea({ products = [], addToCart, page, pages, keyword,showQuickView }) {
   
+  const dispatch = useDispatch()
   const [current, setCurrent] =React.useState(page);
   const [numViews, setNumViews] =React.useState(0);
   
-  const addToWishList = async (prodId,userId) => await axios.post(`http://127.0.0.1:5000/wishList/${prodId}/${userId}`)
+  const addToWishList = async (prodId,userId) => await axios.post(`http://127.0.0.1:5000/products/wishList/${prodId}/${userId}`)
   
+   const search = useSelector(state=>state.search)
+   const sortProducts = (e) => { 
+    dispatch(listProducts(search.keyword,search.pageNumber,e.target.value,search.searchByCat,search.searchByBrand));
+    dispatch(addParams(search.keyword, search.pageNumber,e.target.value,search.searchByCat,search.searchByBrand))
+   }
 
   //  const handleNumViews = async (id,Views) =>{
   //    setNumViews(Views++)
@@ -28,13 +37,13 @@ function ShopArea({ products = [], addToCart, page, pages, keyword,showQuickView
 
             <div className="col-lg-3 col-md-3">
               <div className="products-ordering-list">
-                <select className="form-control">
-                  <option>Sort by price: low to high</option>
-                  <option>Default sorting</option>
-                  <option>Sort by popularity</option>
-                  <option>Sort by average rating</option>
-                  <option>Sort by latest</option>
-                  <option>Sort by price: high to low</option>
+                <select onChange={sortProducts} className="form-control">
+                  <option value="price">Sort by price: low to high</option>
+                  <option value="name">Default sorting</option>
+                  {/* <option>Sort by popularity</option> */}
+                  {/* <option >Sort by average rating</option> */}
+                  <option value="createdAt" >Sort by latest</option>
+                  <option value="-price" >Sort by price: high to low</option>
                 </select>
               </div>
             </div>
@@ -47,16 +56,10 @@ function ShopArea({ products = [], addToCart, page, pages, keyword,showQuickView
                 <div className="single-shop-products">
                   <div className="shop-products-image">
                     <Link to={`/products-details/${product._id}`}>
-                      {/* <Image
-                        key={product._id}
-                        cloudName={process.env.REACT_APP_CLOUDINARY_NAME}
-                        publicId={product.image_public_id}
-                        width="300"
-                        crop="scale"
-                      /> */}
+                    
                       <img src={product.image} width="300" alt="image" />
                     </Link>
-                    <div className="tag">{product.discount!=0? "New" : "Discount"}</div>
+                    <div className="tag">{product.discount!=0? "Discount" : "New"}</div>
                     <ul className="shop-action">
                       <li>
                         <span
@@ -67,7 +70,7 @@ function ShopArea({ products = [], addToCart, page, pages, keyword,showQuickView
                         </span>
                       </li>
                       <li>
-                          <span className="addtocart-icon-wrap" onClick={()=>{addToWishList(product._id,"623c8352c59bae28dce17c03")}}>
+                          <span className="addtocart-icon-wrap" onClick={()=>{addToWishList(product._id,"6240d2511f6d0f3694bb9fb3")}}>
                             <i className="flaticon-heart"></i>
                             </span>
                       </li>
