@@ -146,7 +146,8 @@ function RegisterArea({ history, location }) {
             </div>
           </div>
         </div>
-
+    
+              
         <button type="submit">Register now</button>
       </form>
 
