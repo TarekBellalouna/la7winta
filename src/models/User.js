@@ -6,11 +6,7 @@ const UserSchema = new Schema({
   name: {
     type: String,
     required: true,
-  },
-  gender: {
-    type: String,
-    required: false,
-  },
+  }, 
   username: {
     type: String,
     required: true,
@@ -30,16 +26,17 @@ const UserSchema = new Schema({
   },
   phone: {
     type: String,
-    required: true,
+    required: false,
   },
   profile_picture: {
     type: String,
     required: false,
   },
-  role: {
-    type: String,
-    default: "role"
-  },
+  isAdmin: {
+    type: Boolean,
+    required:true,
+    default: false,
+  }, 
   orders: [
     {
       type: Schema.Types.ObjectId,
@@ -69,16 +66,18 @@ const UserSchema = new Schema({
     default: 'FREE'
   },
   status: { type: Boolean, default: true },
-  isAdmin: {
-    type: Boolean,
-    default: false,
-  },
-  profileImage: {
-    type: String,
-  }
+  
 });
 
 
+UserSchema.statics.login = async function(email, password) {
+  const user = await this.findOne({ email });
+   if (user) {
+      return user;}},
+      
+UserSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
 
 UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {

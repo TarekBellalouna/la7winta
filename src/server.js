@@ -37,6 +37,7 @@ app.use("/order", orderRoutes);
 app.use("/donation", donationRoutes);
 app.use("/event", eventRoutes);
 app.use(cors());
+
 production && (
   app.get("/*", (req, res) => {
     res.sendFile(path.join(__dirname, "../client/build", "index.html"));

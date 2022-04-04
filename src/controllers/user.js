@@ -1,14 +1,16 @@
+
+ 
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const User = require("../models/User");
-const genAccTkn = require("../helpers/genAccessToken");
+//const genAccTkn = require("../helpers/genAccessToken");
 const maxAge = 3 * 24 * 60 * 60 * 1000;
 const multer = require('multer')
 const path = require('path')
 const { fileURLToPath } = require('url')
 // import { fileURLToPath } from 'url';
-
+const nodemailer =require("nodemailer")
 
 const {
   validateRegisterInput,
@@ -20,43 +22,101 @@ const createToken = (id) => {
     expiresIn: 360000
   })
 };
+module.exports.forgetPassword = async (req, res) => {
+  const { email } = req.body 
+  const user = await User.findOne({ email });
+  if(user!==null){
+    const name =user.name;
+    const subject='forget Password';
+    const message =`http://localhost:3000/reset-password/${user._id}`;
+    let transporter =nodemailer.createTransport({
+      service:"gmail",
+      auth:{
+        user:'nourelhouda.zemni@esprit.tn',
+        pass:'2522511425'
+      },
+    });
+    const msg ={
+      from:'nourelhouda.zemni@esprit.tn',
+      to:'****@esprit.tn',
+      subject:`${subject}`,
+      text:`Click here:${message}`
+    }
+    const info = await transporter.sendMail(msg,(err,info)=>{
+      if(err){
+        console.log(err)
+      }
+      else{
+        res.send('email sent!')
+      }
+    })
+  }
+  else{
+    res.send('user doesnt exist!')
+  }
 
-///////////
+  
+}
+
+//////////////////////////////////////SIGN UP///////////
 module.exports.signUp = async (req, res) => {
   const { username, name, phone, gender, email, password, isAdmin } = req.body
 
-  try {
+  const userExists = await User.findOne({email});
+  if (userExists) {
+    res.status(404);
+    throw new Error("User already exists");
+  }
+ 
+    
     const user = await User.create({ username, name, gender, phone, email, password, isAdmin });
-    res.status(201).json({ user: user._id });
-  }
-  catch (err) {
+    
 
-    res.status(200).send({ msg: err })
-  }
+    if (user) {
+      res.status(201).json({
+        _id: user._id,
+        name: user.name,
+        username: user.username,
+        phone: user.phone,
+        email: user.email,
+        isAdmin: user.isAdmin,
+        
+        token: createToken(user._id),
+      });
+    } else {
+      res.send(token);
+      res.status(400);
+      throw new Error("User not found");
+    }
 }
+//////////////////////////////////////////////////////////////////////////
+ ////////////////////////////////////////sign in //////////////
 /////////
 module.exports.signIn = async (req, res) => {
-  const { email, password } = req.body
-  // const user = User.findOne({ email })
-  User.findOne({ email: email }, function (err, obj) {
-    const user = obj
-    if (user) {
-      const isMatch = bcrypt.compare(password, user.password);
-      if (isMatch) {
-        var token = createToken(user._id)
-        return res.json({
-          user: user,
-          token: token,
-        })
-      }
-      return res.status(400).json({ message: 'Invalid Credentials' })
+  try{
+    const { email, password } = req.body 
+    const user = await User.findOne({ email });
+    
+    if (user && (await user.matchPassword(password))) {
+      console.log(user)
+      res.json({
+        '_id': user._id,
+        'name': user.name,
+        'email': user.email,
+        'isAdmin': user.isAdmin,
+        'token': createToken(user._id),
+      });
+    } else {
+      res.status(401);
+      throw new Error("Invalid Email or Password");
     }
-    return res.status(400).json({ message: 'Invalid Credentials' })
-  });
+  }
+  catch(err){
+    res.send(err)
+  }
+    
 };
-
-
-
+//////////////////////////////////////////////////////////
 exports.updateFile = async (req, res) => {
   console.log("first", req.file)
   console.log("bodyyy", req.body)
@@ -302,3 +362,33 @@ exports.updateRole = async (req, res) => {
     res.status(404).json({ message: "User Doesn't Exist" })
   }
 }
+
+// @desc    GET user profile
+// @route   GET /api/users/profile
+// @access  Private
+module.exports.updateUserProfile = (async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    user.pic = req.body.pic || user.pic;
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      pic: updatedUser.pic,
+      isAdmin: updatedUser.isAdmin,
+      token: generateToken(updatedUser._id),
+    });
+  } else {
+    res.status(404);
+    throw new Error("User Not Found");
+  }
+});

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-import Event from "./components/Event/Event";
+import CreateEvent from "./components/Event/CreateEvent";
 import Home from "./pages/Home/Home";
 import HomeTwo from "./pages/Home/HomeTwo";
 import HomeThree from "./pages/Home/HomeThree";
@@ -57,8 +57,11 @@ import { useSelector } from 'react-redux'
 
 import DonationList from "./components/Donation/DonationList";
 import EditEvent from "./components/Event/EditEvent"; 
+import Event from "./components/Event/Event"; 
 
 import EventList from "./components/Event/EventList";
+import PasswordResetArea from "./components/Auth/PasswordResetArea";
+import ForgetPassword from "./pages/Authentications/Forgetpassword";
 
 
 function App() {
@@ -226,16 +229,18 @@ function App() {
               {!token && <Route path="/login" component={Login} />}
               {!token && <Route path="/register" component={Register} />}
 
-              <Route exact path="/EventC"  component={Event} />
+              <Route exact path="/EventC"  component={CreateEvent} />
               
               <Route exact path="/AllEvents"  component={EventList} />
-              <Route path='/edit/:id' component={EditEvent} />
  
               
               <Route exact path="/donate/:id"  component={DonationList} />
               
               <Route path='/admin' element={<Admin />} />
-              <Route exact path="/EventC" component={Event} />
+              <Route exact path="/Event/:id" component={Event} />
+              <Route exact path="/EditEvent/:id" component={EditEvent} />
+              <Route exact path="/forget-password" component={ForgetPassword} />
+              <Route exact path="/reset-password/:id" component={PasswordResetArea} />
             </Switch>
           </div>
         </CartContext.Provider>

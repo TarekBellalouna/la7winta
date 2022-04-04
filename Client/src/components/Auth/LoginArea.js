@@ -85,7 +85,7 @@ function LoginArea({ customClass = "", history, location }) {
           </div>
 
           <div className="col-lg-6 col-md-6 col-sm-6 lost-your-password">
-            <a href="#" className="lost-your-password">
+            <a href="/forget-password" className="lost-your-password">
               Forgot your password?
             </a>
           </div>
