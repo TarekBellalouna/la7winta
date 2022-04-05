@@ -7,7 +7,8 @@ import logo2 from "../../assets/img/logo-2.png";
 import AuthContext from "../../contexts/auth-context";
 import {addParams} from '../../redux/search/searchActions.js'
 
-const homeRoutes = ["/", "/home-two", "/home-three", "/home-four"];
+// const homeRoutes = ["/", "/home-two", "/home-three", "/home-four"];
+const homeRoutes = ["/"];
 const pagesRoutes = [
   "/about",
   "/our-team",
@@ -120,7 +121,7 @@ function Navbar() {
                   <li className="nav-item respo-nav">
                     <a href="#" className="nav-link">
                       <i className="bx bx-menu"></i>
-                      All Categories
+                      All Brands
                     </a>
                     <ul className="dropdown-menu">
                       {brandList?.map(brand=>(
@@ -145,9 +146,11 @@ function Navbar() {
                     isActive={() => homeRoutes.includes(pathname)}
                     className="nav-link"
                   >
-                    Home <i className="bx bx-chevron-down chevron-display"></i>
+                    Home
+                     {/* <i className="bx bx-chevron-down chevron-display"></i> */}
                     <span className="plus_icon">+</span>
                   </NavLink>
+                   {/*
                   <ul className="dropdown-menu">
                     <li className="nav-item">
                       <NavLink to={"/"} className="nav-link">
@@ -172,7 +175,7 @@ function Navbar() {
                         Home Four
                       </NavLink>
                     </li>
-                  </ul>
+                  </ul> */}
                 </li>
 
                 <li className="nav-item megamenu">
@@ -319,10 +322,11 @@ function Navbar() {
                     isActive={() => shopRoutes.includes(pathname)}
                     className="nav-link"
                   >
-                    Shop <i className="bx bx-chevron-down chevron-display"></i>
-                    <span className="plus_icon">+</span>
+                    Shop
+                     {/* <i className="bx bx-chevron-down chevron-display"></i>
+                    <span className="plus_icon">+</span> */}
                   </NavLink>
-                  <ul className="dropdown-menu">
+                  {/* <ul className="dropdown-menu">
                     <li className="nav-item">
                       <NavLink to="/shop" className="nav-link">
                         Shop
@@ -370,7 +374,7 @@ function Navbar() {
                         Checkout
                       </NavLink>
                     </li>
-                  </ul>
+                  </ul> */}
                 </li>
 
                 <li className="nav-item">
@@ -379,10 +383,11 @@ function Navbar() {
                     isActive={() => blogRoutes.includes(pathname)}
                     className="nav-link"
                   >
-                    Blog <i className="bx bx-chevron-down chevron-display"></i>
-                    <span className="plus_icon">+</span>
+                    Blog 
+                    {/* <i className="bx bx-chevron-down chevron-display"></i>
+                    <span className="plus_icon">+</span> */}
                   </NavLink>
-                  <ul className="dropdown-menu">
+                  {/* <ul className="dropdown-menu">
                     <li className="nav-item">
                       <NavLink to="/blog" className="nav-link">
                         Blog
@@ -418,7 +423,7 @@ function Navbar() {
                         Blog Details
                       </NavLink>
                     </li>
-                  </ul>
+                  </ul> */}
                 </li>
 
                 <li className="nav-item">
@@ -427,7 +432,7 @@ function Navbar() {
                   </NavLink>
                 </li>
 
-                {context.token && (
+                {!context.token && (
                   <>
                     {/* <li className="nav-item">
                       <NavLink
