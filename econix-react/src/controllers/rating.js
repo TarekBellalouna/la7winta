@@ -5,7 +5,7 @@ exports.fetchRatings = async (req, res) => {
   try {
     const pageSize = 12
     const page = Number(req.query.pageNumber) || 1
-  
+   console.log(res)
     const keyword = req.query.keyword
       ? {
           name: {
@@ -66,6 +66,19 @@ exports.fetchRatingByproduct = async (req, res) => {
     
     const id = req.params.ratingId;
     const rating = await Rating.find({ product: id });
+    res.status(200).json({
+      rating,
+    });
+  } catch (err) {
+    res.status(500);
+  }
+};
+
+exports.fetchRatingByuser = async (req, res) => {
+  try {
+    
+    const id = req.params.userId;
+    const rating = await Rating.find({ user: id });
     res.status(200).json({
       rating,
     });

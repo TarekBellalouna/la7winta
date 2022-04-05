@@ -14,6 +14,7 @@ function ProductsDetailsArea() {
   const [comment, setComment] = useState([]);
   const [moyStar, setmoyStar] = useState([]);
   let [nbTotStar, setnbTotStar] = useState(0);
+  const [ratinguser, setRatinguser] = useState([]);
   const [nbComment, setnbComment] = useState(0);
   const [rating, setRating] = useState(0);
   const [nbRate, setnbRate] = useState(0);
@@ -31,12 +32,18 @@ function ProductsDetailsArea() {
   const [message, setMessage] = useState(null);
   const [messageComm, setMessageComm] = useState(null);
   const [messageError, setMessageError] = useState(null);
+  const [messageErroruser, setMessageErroruser] = useState(null);
   const handleRating = (e) =>{
     e.preventDefault();
+    console.log(ratinguser);
     if(star==0)
-    {setMessageError("thabet min rou7ik ya khra!!")
+    {setMessageError("Check your rating!!")
      setMessage(null) }
-    else
+    else if(ratinguser.length!=0)
+    {setMessageErroruser("you already put your rating!!")
+    setMessageError(null)
+     setMessage(null) }
+     else
    { fetch("/ratings/add-rating", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -144,6 +151,21 @@ function ProductsDetailsArea() {
       })
       .catch((err) => console.log(err));
   }
+  useEffect(() => {
+    axios
+      .get("/ratings/fetch-rating-byuser/" + username)
+      .then((res) => {
+        res.data.rating.map((rating)=>(
+          productId===rating.product
+          ?setRatinguser(res.data.rating)
+          :console.log(rating.product)
+        ));
+       
+        
+        
+      })
+      .catch((err) => console.log(err));
+  }, []);
   useEffect(() => {
     axios
       .get("/products/fetch-product/" + productId)
@@ -460,7 +482,13 @@ function ProductsDetailsArea() {
                   </div>
                   <div className="middle">
                     <div className="bar-container">
-                      <div className="bar-5"></div>
+                      <div className={  
+                   ( Math.round(10*(fivestar/nbRate))>=5 
+                    ?"bar-"+5
+                    :Math.round(10*(fivestar/nbRate))===0
+                    ?"bar-"+1
+                    :"bar-"+Math.round(10*(fivestar/nbRate))
+                    )}></div>
                     </div>
                   </div>
                   <div className="side right">
@@ -471,18 +499,31 @@ function ProductsDetailsArea() {
                   </div>
                   <div className="middle">
                     <div className="bar-container">
-                      <div className="bar-4"></div>
+                      <div className={  
+                   ( Math.round(10*(fourstar/nbRate))>=5 
+                    ?"bar-"+5
+                    :Math.round(10*(fourstar/nbRate))===0
+                    ?"bar-"+1
+                    :"bar-"+Math.round(10*(fourstar/nbRate))
+                    )}></div>
                     </div>
                   </div>
                   <div className="side right">
-                    <div>{Math.round(100*fourstar/nbRate)}%</div>
+                    <div>{Math.round(100*fourstar/nbRate)}%
+                  </div>
                   </div>
                   <div className="side">
                     <div>3 star</div>
                   </div>
                   <div className="middle">
                     <div className="bar-container">
-                      <div className="bar-3"></div>
+                      <div className={  
+                   ( Math.round(10*(threestar/nbRate))>=5 
+                    ?"bar-"+5
+                    :Math.round(10*(threestar/nbRate))===0
+                    ?"bar-"+1
+                    :"bar-"+Math.round(10*(threestar/nbRate))
+                   )}></div>
                     </div>
                   </div>
                   <div className="side right">
@@ -493,7 +534,13 @@ function ProductsDetailsArea() {
                   </div>
                   <div className="middle">
                     <div className="bar-container">
-                      <div className="bar-2"></div>
+                      <div className={  
+                   ( Math.round(10*(twostar/nbRate))>=5 
+                    ?"bar-"+5
+                    :Math.round(10*(twostar/nbRate))===0
+                    ?"bar-"+1
+                    :"bar-"+Math.round(10*(twostar/nbRate))
+                    )}></div>
                     </div>
                   </div>
                   <div className="side right">
@@ -504,7 +551,13 @@ function ProductsDetailsArea() {
                   </div>
                   <div className="middle">
                     <div className="bar-container">
-                      <div className="bar-1"></div>
+                      <div className={  
+                   ( Math.round(10*(onestar/nbRate))>=5 
+                    ?"bar-"+5
+                    :Math.round(10*(onestar/nbRate))===0
+                    ?"bar-"+1
+                    :"bar-"+Math.round(10*(onestar/nbRate))
+                    ) }></div>
                     </div>
                   </div>
                   <div className="side right">
@@ -547,6 +600,22 @@ function ProductsDetailsArea() {
         ) : (
           <div className={`alert alert-danger `} role="alert">
             {messageError}
+          </div>
+        ))}
+                {messageErroruser &&
+        (Array.isArray(messageErroruser) ? (
+          <div className="alert alert-danger" role="alert">
+            <ul className="errors" style={{ marginBottom: 0 }}>
+              {messageError.map((msg) => (
+                <li key={msg} className="error">
+                  {msg}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <div className={`alert alert-danger `} role="alert">
+            {messageErroruser}
           </div>
         ))}
                 {message &&

@@ -7,6 +7,7 @@ const ratingController = require("../controllers/rating");
 router.get("/", ratingController.fetchRatings);
 router.get("/fetch-rating/:ratingId", ratingController.fetchRating);
 router.get("/fetch-rating-byprod/:ratingId", ratingController.fetchRatingByproduct);
+router.get("/fetch-rating-byuser/:userId", ratingController.fetchRatingByuser);
 router.post("/add-rating", ratingController.addRating);
 router.post("/edit-rating", ratingController.editRating);
 router.post("/delete-rating", ratingController.deleteRating);
