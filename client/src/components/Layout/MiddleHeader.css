@@ -1,0 +1,11 @@
+.middle-header-area form .row .select-column .form-group select {
+  background-color: #15407f;
+  color: #fff;
+  height: 50px;
+}
+
+.middle-header-area form .row .select-column .form-group select option {
+  background: #fff;
+  color: #000000;
+}
+/*# sourceMappingURL=MiddleHeader.css.map */
