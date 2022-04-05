@@ -70,7 +70,7 @@ function ShopArea({ products = [], addToCart, page, pages, keyword,showQuickView
                         </span>
                       </li>
                       <li>
-                          <span className="addtocart-icon-wrap" onClick={()=>{addToWishList(product._id,"6240d2511f6d0f3694bb9fb3")}}>
+                          <span className="addtocart-icon-wrap" onClick={()=>{addToWishList(product._id,"624b555e02cd4d5308819f99")}}>
                             <i className="flaticon-heart"></i>
                             </span>
                       </li>

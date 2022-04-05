@@ -9,9 +9,9 @@ import axios from "axios";
 
 function WishListArea() {
   const [userInfo, setUser] = useState([]);
-  const [userId, setUserId] = useState("6240d2511f6d0f3694bb9fb3");
+  const [userId, setUserId] = useState("624b555e02cd4d5308819f99");
 
-  const RemoveFromWishList = async (prodId,userId) => await axios.put(`http://127.0.0.1:5000/products/wishListDel/${prodId}/${userId}`)
+  const RemoveFromWishList = async (prodId,userId) => await axios.put(`http://127.0.0.1:5000/products/wishListDel/${prodId}/624b555e02cd4d5308819f99`)
 
 
   useEffect(() => {
@@ -38,7 +38,7 @@ function WishListArea() {
                 userInfo.map((product) => 
                   <tr>
                     <td className="product-remove">
-                      <a   className="remove" onClick={()=>{RemoveFromWishList(product._id,"6240d2511f6d0f3694bb9fb3")}} >
+                      <a   className="remove" onClick={()=>{RemoveFromWishList(product._id,"623b4abf641c0826743174ae")}} >
                         <i className="bx bx-x"></i>
                       </a>
                     </td>
