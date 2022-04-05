@@ -30,15 +30,13 @@ exports.add = async (req,res) => {
     }
 };
 exports.getAll = async(req,res) => {
-    await Event.find({}).populate('User').then(Event=>{
-        return res.status(200).json(Event);
-    }).catch(err=>{
-        return res.json(err);
-    });
+    
+    res.status(200).send(await Event.find().populate("Donations"));
+    
 }
 
 exports.findById = async(req,res) => {
-    await Event.findOne({_id:req.params.id}).populate('User').then(Event=>{
+    await Event.findOne({_id:req.params.id}).populate('User').populate("Donations").then(Event=>{
         return res.status(200).json(Event);
     }).catch(err=>{
         return res.json(err);
@@ -58,8 +56,41 @@ exports.delete = async(req,res)=>{
 
 /* UPDATE BOOK */
 exports.put= async(req, res, next) => {
-    Event.findByIdAndUpdate(req.params.id, req.body, function (err, post) {
-      if (err) return next(err);
-      res.json(post);
-    });
-  } 
+    
+    try {
+        // Upload image to cloudinary
+        const result = await cloudinary.uploader.upload(req.file.path);
+          var event=new Event(
+        {
+            title:req.body.title,
+            description:req.body.description, 
+            location:req.body.location,
+            Startdate: req.body.Startdate,
+            Enddate: req.body.Enddate,
+            user:req.body.user, 
+            avatar: result.secure_url,
+            cloudinary_id: result.public_id,
+        }
+    ) 
+        Event.findByIdAndUpdate(req.params.id, 
+            {
+                title:req.body.title,
+                description:req.body.description, 
+                location:req.body.location,
+                Startdate: req.body.Startdate,
+                Enddate: req.body.Enddate,
+                user:req.body.user, 
+                avatar: result.secure_url,
+                cloudinary_id: result.public_id,
+            }
+            , function (err, post) {
+            if (err) return next(err);
+            res.send(post);
+        });
+
+    }catch(err){
+        res.send(err);
+
+    }
+
+} 

@@ -36,14 +36,15 @@ const Event = new mongoose.Schema({
     UpdatededAt:{
         type:Date,
     },
+    see:{type:Boolean, default: false },
     Enddate:{
         type:Date, 
     },
     
-    Donations:{
-          //  type: mon
-          //  [{ type: mongoose.Types.ObjectId, required: true, ref: "contact" }]
-    },
+    Donations:
+        [
+            { type: mongoose.Types.ObjectId, ref: "donation", default: [] },
+          ] ,
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref : "User"
