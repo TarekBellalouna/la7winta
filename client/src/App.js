@@ -51,6 +51,10 @@ import ShopArea from "./components/Shop/ShopArea";
 import Navbar from "./components/Layout/Navbar";
 import TopHeader from "./components/Layout/TopHeader";
 import BarChart from "./components/Charts/BarChart";
+import AddAuction from "./pages/Auctions/AddAuction";
+import Auctions from "./pages/Auctions/Auctions";
+import AuctionsDetails from "./pages/Auctions/AuctionsDetails";
+
 
 function App() {
   const [token, setToken] = useState(null);
@@ -208,6 +212,11 @@ function App() {
               <Route path="/profile" component={User} />
                <Route path="/products" component={Products} />
               <Route path="/reset" component={ResetPassword} />
+              {/* Auctions*/}
+              <Route path="/auction" component={Auctions} />
+              <Route  path="/auctions-room/:auctionId" component={AuctionsDetails} /> 
+              <Route path="/add-auction" component={AddAuction} />
+
             </Switch>
           </div>
         </CartContext.Provider>

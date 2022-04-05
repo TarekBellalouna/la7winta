@@ -9,6 +9,7 @@ const categoryRoutes = require("./routings/category")
 const orderRoutes = require("./routings/order");
 const couponRoutes = require("./routings/coupon");
 const stripeRoutes = require("./routings/stripe");
+const auctionRoutes = require("./routings/auction");
 
 const production = process.env.NODE_ENV === "production";
 
@@ -36,6 +37,7 @@ app.use("/user", userRoutes);
 app.use("/order", orderRoutes);
 app.use("/coupon", couponRoutes);
 app.use("/stripe", stripeRoutes);
+app.use("/auction", auctionRoutes);
 
 production && (
   app.get("/*", (req, res) => {

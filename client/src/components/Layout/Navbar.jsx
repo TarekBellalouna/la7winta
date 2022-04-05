@@ -315,7 +315,17 @@ function Navbar() {
                     </li>
                   </ul>
                 </li>
-
+                <li className="nav-item">
+                  <NavLink
+                    to={"/auction"}
+                    isActive={() => homeRoutes.includes(pathname)}
+                    className="nav-link"
+                  >
+                    Auctions 
+                    {/* <i className="bx bx-chevron-down chevron-display"></i>
+                    <span className="plus_icon">+</span> */}
+                  </NavLink>
+                   </li>             
                 <li className="nav-item">
                   <NavLink
                     to="/shop"
