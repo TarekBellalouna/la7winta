@@ -62,7 +62,14 @@ export const login = (email, password) => async (dispatch) => {
             }
         }
         const { data } = await axios.post('user/login', { email, password }, config)
+<<<<<<< Updated upstream
         localStorage.setItem('econixtoken', JSON.stringify(data))
+=======
+        console.log(data)
+        localStorage.setItem('token', JSON.stringify(data.token))
+        localStorage.setItem('user', JSON.stringify(data))
+        history.push('/profile')
+>>>>>>> Stashed changes
         dispatch({
             type: USER_LOGIN_SUCCESS,
             payload: data
@@ -78,7 +85,12 @@ export const login = (email, password) => async (dispatch) => {
 }
 
 export const logout = () => (dispatch) => {
+<<<<<<< Updated upstream
     localStorage.removeItem('econixtoken')
+=======
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+>>>>>>> Stashed changes
     dispatch({ type: USER_LOGOUT })
 }
 

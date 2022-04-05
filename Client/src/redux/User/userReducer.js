@@ -21,14 +21,23 @@ import {
 } from "./userConstants.js";
 
 const INITIAL_STATE = {
+<<<<<<< Updated upstream
     user: null,
+=======
+    user: JSON.parse(localStorage.getItem('user')) || null,
+>>>>>>> Stashed changes
     userInfo: null,
     isLoggedIn: false,
     loading: false,
     loadingDelete: false,
     loadingDisable: false,
     loadingList: false,
+<<<<<<< Updated upstream
     token: null,
+=======
+    token: localStorage.getItem('token') || null,
+    userToken:localStorage.getItem('token') || null,
+>>>>>>> Stashed changes
     users: null,
     successDelete: false,
     successDisable: false,

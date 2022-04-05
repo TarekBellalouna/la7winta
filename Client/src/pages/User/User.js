@@ -115,6 +115,10 @@ function User({ match, history }) {
     }
   }, []);
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
   return (
     <div className="user_wrapper">
       <PageTitle title={user.name} />
@@ -142,7 +146,11 @@ function User({ match, history }) {
             <tbody>
               <tr>
                 <th scope="row">Username:</th>
+<<<<<<< Updated upstream
                 <td>{user.username}</td>
+=======
+                <td>{user.name}</td>
+>>>>>>> Stashed changes
               </tr>
               <tr>
                 <th scope="row">Email:</th>
