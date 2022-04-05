@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAKU,mBALS,CACjB,IAAI,CACF,IAAI,CACF,cAAc,CACZ,WAAW,CACT,MAAM,CAAC;EACL,gBAAgB,EAAE,OAAO;EACzB,KAAK,EAAE,IAAI;EACX,MAAM,EAAE,IAAI;CAKb;;AAbX,AASY,mBATO,CACjB,IAAI,CACF,IAAI,CACF,cAAc,CACZ,WAAW,CACT,MAAM,CAIJ,MAAM,CAAC;EACL,UAAU,EAAE,IAAI;EAChB,KAAK,EAAE,OAAO;CACf",
+    "sources": [
+        "MiddleHeader.scss"
+    ],
+    "names": [],
+    "file": "MiddleHeader.css"
+}
