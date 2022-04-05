@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import CartContext from "../../contexts/cart-context";
 import AuthContext from "../../contexts/auth-context";
 import axios from "axios";
+import Link from 'react-router-dom/Link';
 
 function CheckoutArea() {
   const [firstName, setFirstName] = useState("");
@@ -372,6 +373,7 @@ function CheckoutArea() {
                       <label htmlFor="paypal">PayPal</label>
                     </p>
                   </div>
+                  <Link to="/order">
                   <button
                     type="submit"
                     className="default-btn"
@@ -379,6 +381,7 @@ function CheckoutArea() {
                   >
                     Place Order
                   </button>
+                  </Link>
                 </div>
               </div>
             </div>
