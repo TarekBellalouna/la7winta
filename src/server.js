@@ -10,6 +10,8 @@ const orderRoutes = require("./routings/order");
 const couponRoutes = require("./routings/coupon");
 const stripeRoutes = require("./routings/stripe");
 const auctionRoutes = require("./routings/auction");
+const ratingRoutes = require("./routings/rating");
+const commentRoutes = require("./routings/comment");
 
 const production = process.env.NODE_ENV === "production";
 
@@ -38,6 +40,8 @@ app.use("/order", orderRoutes);
 app.use("/coupon", couponRoutes);
 app.use("/stripe", stripeRoutes);
 app.use("/auction", auctionRoutes);
+app.use("/ratings", ratingRoutes);
+app.use("/comments", commentRoutes);
 
 production && (
   app.get("/*", (req, res) => {
