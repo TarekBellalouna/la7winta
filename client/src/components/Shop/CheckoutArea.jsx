@@ -2,7 +2,10 @@ import React, { useContext, useState } from "react";
 import CartContext from "../../contexts/cart-context";
 import AuthContext from "../../contexts/auth-context";
 import axios from "axios";
-import Link from 'react-router-dom/Link';
+//import Link from 'react-router-dom/Link';
+//import { useNavigate } from 'react-router-dom';
+import { Redirect } from 'react-router'
+
 
 function CheckoutArea() {
   const [firstName, setFirstName] = useState("");
@@ -16,6 +19,9 @@ function CheckoutArea() {
   const [postCode, setPostCode] = useState("");
   const [orderNotes, setOrderNotes] = useState("");
   const [message, setMessage] = useState("");
+
+  //const navigate = useNavigate();
+  const [submitted, setSubmitted] = useState(false);
 
   const context = useContext(CartContext);
   const authContext = useContext(AuthContext);
@@ -32,9 +38,9 @@ function CheckoutArea() {
 
 
   const submitOrder = (e) => {
-    setMessage("chackout")
-    /*e.preventDefault();
-    if (!authContext.userId && !authContext.token) {
+    //setMessage("chackout")
+   e.preventDefault();
+     /*if (!authContext.userId && !authContext.token) {
       setMessage("You need to login first");
       return;
     }*/
@@ -54,7 +60,11 @@ function CheckoutArea() {
         totalPrice:   context.cartItems.itemsPrice
       })
       .then((res) => {
+        
+        setSubmitted(true)
         if (res?.data?.message === "Order successfully added") {
+          //this.props.history.push('/order')
+          //navigate("/order");
           localStorage.removeItem("cart-items");
           setFirstName("");
           setLastName("");
@@ -69,10 +79,18 @@ function CheckoutArea() {
           setMessage(res.data.message);
         }
         console.log(res.data)
+
+        
       })
       .catch((err) => console.log(err));
   };
-
+  if (submitted) {
+    return <Redirect push to={{
+      pathname: '/order',
+      
+    }}
+    />
+  }   
   return (
     <section className="checkout-area ptb-50">
       <div className="container">
@@ -373,7 +391,7 @@ function CheckoutArea() {
                       <label htmlFor="paypal">PayPal</label>
                     </p>
                   </div>
-                  <Link to="/order">
+                
                   <button
                     type="submit"
                     className="default-btn"
@@ -381,7 +399,7 @@ function CheckoutArea() {
                   >
                     Place Order
                   </button>
-                  </Link>
+                  
                 </div>
               </div>
             </div>
