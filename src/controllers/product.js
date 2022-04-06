@@ -35,7 +35,7 @@ exports.addProduct = async (req, res) => {
     const price = req.body.product_price;
     const color = req.body.product_color;
     const total_in_stock = req.body.total_in_stock;
-    const image_public_id = req.body.image_public_id;
+    const image = req.body.image;
     const file = req.files.file;
 
     const product = new Product({

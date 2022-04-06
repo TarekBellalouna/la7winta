@@ -1,0 +1,36 @@
+.owl-nav {
+  .owl-prev,
+  .owl-next {
+    visibility: hidden;
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transition: 0.5s;
+    margin: 0;
+    outline: 0;
+    width: 45px;
+    height: 45px;
+    line-height: 52px;
+    background-color: #136 !important;
+    border: 1px solid #136 !important;
+    color: #fff !important;
+    border-radius: 50% !important;
+  }
+  .owl-next {
+    left: auto;
+    right: 10px;
+  }
+}
+
+.owl-theme:hover {
+  .owl-nav {
+    .owl-prev {
+      visibility: visible;
+      transform: translateX(50%);
+    }
+    .owl-next {
+      visibility: visible;
+      transform: translateX(-50%);
+    }
+  }
+}
