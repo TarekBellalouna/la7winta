@@ -63,25 +63,6 @@ h6 {
   font-family: poppins, sans-serif;
   font-weight: 600;
 }
-.radioflex{
-  display: flex;
-}
-.radio-inline{
-  margin-right: 2pc;
-}
-.radio{
-  cursor:pointer;
-  display: inline-block;
-  position:relative;
-  vertical-align: top;
-  content:"";
-  width: 1em;
-  height: 1em;
-  text-align: center;
-  border-radius: 100%;
-  -webkit-transform: all 250ms ease;
-
-}
 .h1:last-child,
 .h2:last-child,
 .h3:last-child,

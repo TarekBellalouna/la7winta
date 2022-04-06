@@ -1,4 +1,4 @@
-import LoginArea from "../../components/Auth/LoginArea.js";
+import LoginArea from "../../components/Auth/LoginArea";
 import PageTitle from "../../components/Common/PageTitle";
 
 import Support from "../../components/Common/Support";

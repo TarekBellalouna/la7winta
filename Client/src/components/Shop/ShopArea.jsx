@@ -72,7 +72,7 @@ function ShopArea({ products = [], addToCart, page, pages, keyword,showQuickView
 
                   <div className="shop-products-content">
                     <h3>
-                      <Link to={`/products-details/${product._id}`}>
+                      <Link to={`/products-details/${ product._id}`}>
                         {product.name}
                       </Link>
                     </h3>

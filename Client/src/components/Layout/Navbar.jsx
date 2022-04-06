@@ -1,15 +1,9 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { dispatch } from "react-hot-toast";
-import { Link, NavLink, useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { Link, NavLink, useLocation, useHistory } from "react-router-dom";
 
 import logo2 from "../../assets/img/logo-2.png";
 import AuthContext from "../../contexts/auth-context";
-import { logout } from "../../redux/User/userAction.js";
-import { useSelector } from "react-redux";
-
-import history from "../../history.js";
 
 const homeRoutes = ["/", "/home-two", "/home-three", "/home-four"];
 const pagesRoutes = [
@@ -50,29 +44,27 @@ const blogRoutes = [
 ];
 const productsRoutes = ["/products", "/add-product"];
 
-function Navbar({ location }) {
-  // const [user, setUser] = useState({});
+function Navbar() {
+  const [user, setUser] = useState({});
   const [visible, setVisible] = useState(false);
   const { pathname } = useLocation();
   const context = useContext(AuthContext);
-  // const history = useHistory();
+  const history = useHistory();
   const [active, setActive] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
 
-  const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   if (context && context.userId) {
-  //     axios
-  //       .get(`/user/${context.userId}`)
-  //       .then((res) => {
-  //         setUser(res.data.user);
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //   }
-  // }, [context]);
+  useEffect(() => {
+    if (context && context.userId) {
+      axios
+        .get(`/user/${context.userId}`)
+        .then((res) => {
+          setUser(res.data.user);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [context]);
 
   const toggleHotline = () => {
     setActive(!active);
@@ -99,19 +91,9 @@ function Navbar({ location }) {
   }, [visible, handleScroll]);
 
   const handleLogout = () => {
-    dispatch(logout());
+    context.logout();
     history.push("/login");
   };
-
-  const { user } = useSelector((state) => state.userReducer);
-
-  // const redirect = location.search ? location.search.split("=")[1] : "/";
-
-  // useEffect(() => {
-  //   if (!user) {
-  //     history.push("/login");
-  //   }
-  // }, [user]);
 
   return (
     <div className={`navbar-area ${visible ? "is-sticky sticky-active" : ""}`}>
@@ -239,7 +221,41 @@ function Navbar({ location }) {
                     </li>
                   </ul>
                 </li>
+                <li className="nav-item">
+                  <NavLink
+                    to={"/auction"}
+                    isActive={() => homeRoutes.includes(pathname)}
+                    className="nav-link"
+                  >
+                    Auctions <i className="bx bx-chevron-down chevron-display"></i>
+                    <span className="plus_icon">+</span>
+                  </NavLink>
+                  <ul className="dropdown-menu">
+                    <li className="nav-item">
+                      <NavLink to={"/auction"} className="nav-link">
+                        Home
+                      </NavLink>
+                    </li>
 
+                    <li className="nav-item">
+                      <NavLink to={"/home-two"} className="nav-link">
+                        Home Two
+                      </NavLink>
+                    </li>
+
+                    <li className="nav-item">
+                      <NavLink to={"/home-three"} className="nav-link">
+                        Home Three
+                      </NavLink>
+                    </li>
+
+                    <li className="nav-item">
+                      <NavLink to={"/home-four"} className="nav-link">
+                        Home Four
+                      </NavLink>
+                    </li>
+                  </ul>
+                </li>
                 <li className="nav-item megamenu">
                   <NavLink
                     to="/about"
@@ -491,56 +507,6 @@ function Navbar({ location }) {
                     Contact
                   </NavLink>
                 </li>
-   
-                <li className="nav-item">
-                  <NavLink
-                    to="/"
-                    isActive={() => blogRoutes.includes(pathname)}
-                    className="nav-link"  >
-                    Donation <i className="bx bx-chevron-down chevron-display"></i>
-                    <span className="plus_icon">+</span>
-                  </NavLink>
-                  <ul className="dropdown-menu">
-               
-                <li className="nav-item">
-                  <NavLink to="/AddDonate" className="nav-link">
-                   doante 
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                      <NavLink to="/AllDonations" className="nav-link">
-                        All donations
-                      </NavLink>
-                    </li>
-
-</ul></li>
-
-
-
-
-                <li className="nav-item">
-                  <NavLink
-                    to="/"
-                    isActive={() => blogRoutes.includes(pathname)}
-                    className="nav-link"  >
-                    Event <i className="bx bx-chevron-down chevron-display"></i>
-                    <span className="plus_icon">+</span>
-                  </NavLink>
-                  <ul className="dropdown-menu">
-               
-                <li className="nav-item">
-                  <NavLink to="/EventC" className="nav-link">
-                    Create an event
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                      <NavLink to="/AllEvents" className="nav-link">
-                        All events
-                      </NavLink>
-                    </li>
-
-</ul></li>
-
 
                 {context.token && (
                   <>

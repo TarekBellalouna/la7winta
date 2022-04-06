@@ -46,7 +46,7 @@ const PasswordResetArea = () => {
             <h2>Password Reset</h2>
 
             <form onSubmit={(e) => onSubmit(e)}>
-              {/*<div className="form-group">
+              <div className="form-group">
                 <input
                   type="email"
                   className="form-control"
@@ -55,7 +55,7 @@ const PasswordResetArea = () => {
                   value = {formData.email}
                   onChange={(e) => onChange(e)}
                 />
-              </div>*/}
+              </div>
 
               <div className="form-group">
                 <input

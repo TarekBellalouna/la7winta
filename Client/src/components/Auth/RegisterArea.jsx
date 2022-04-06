@@ -1,39 +1,45 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import { register } from "../../redux/User/userAction";
-import history from "../../history.js";
 
-function RegisterArea({ history, location }) {
-  const [name, setName] = useState();
-  const [username, setUsername] = useState();
-  const [email, setEmail] = useState();
-  const [phone, setPhone] = useState();
-  const [password, setPassword] = useState();
-  const [gender, setGender] = useState();
-  const [isAdmin, setIsAdmin] = useState();
-
+function RegisterArea() {
+  const name = useRef();
+  const username = useRef();
+  const email = useRef();
+  const phone = useRef();
+  const password = useRef();
   const [passwordShown, setPasswordShown] = useState(false);
   const [message, setMessage] = useState(null);
 
-  const dispatch = useDispatch();
-
   const handleRegistration = (e) => {
     e.preventDefault();
-    dispatch(register(username, name, gender, phone, email, password, isAdmin));
-    // history.push("/profile");
+
+    fetch("/user/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: name.current.value,
+        username: username.current.value,
+        email: email.current.value,
+        phone: phone.current.value,
+        password: password.current.value,
+      }),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.message === "User created") {
+          name.current.value = "";
+          username.current.value = "";
+          email.current.value = "";
+          phone.current.value = "";
+          password.current.value = "";
+          setMessage("Account successfully created");
+        } else if (res.errors) {
+          let errors = Object.values(res.errors);
+          setMessage(errors);
+        }
+      })
+      .catch((err) => console.log(err));
   };
-
-  // const { user } = useSelector((state) => state.userReducer);
-  // console.log("user", user);
-
-  // const redirect = location.search ? location.search.split("=")[1] : "/profile";
-
-  // useEffect(() => {
-  //   if (user) {
-  //     history.push(redirect);
-  //   }
-  // }, []);
 
   return (
     <div className="register-form">
@@ -54,14 +60,14 @@ function RegisterArea({ history, location }) {
           </div>
         ))}
       <h2>Register</h2>
+
       <form onSubmit={handleRegistration}>
         <div className="form-group">
           <input
             type="text"
             className="form-control"
-            placeholder="Full Name "
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            placeholder="Name"
+            ref={name}
             required
           />
         </div>
@@ -71,8 +77,7 @@ function RegisterArea({ history, location }) {
             type="text"
             className="form-control"
             placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            ref={username}
             required
           />
         </div>
@@ -82,8 +87,7 @@ function RegisterArea({ history, location }) {
             type="text"
             className="form-control"
             placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            ref={email}
             required
           />
         </div>
@@ -93,8 +97,7 @@ function RegisterArea({ history, location }) {
             type="text"
             className="form-control"
             placeholder="Phone"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            ref={phone}
             required
           />
         </div>
@@ -104,31 +107,9 @@ function RegisterArea({ history, location }) {
             type={passwordShown ? "text" : "password"}
             className="form-control"
             placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            ref={password}
             required
           />
-        </div>
-
-        <div className="form-group" class="radioflex">
-          <label for="gender" class="text-light">
-            {" "}
-            Gender
-          </label>
-          <div class="radio-inline">
-            <input type="radio" id="radio-2" name="gender" value="male"></input>
-            <label for="gender" class="radio-label">
-              {" "}
-              male
-            </label>
-          </div>
-          <div class="radio-inline">
-            <input type="radio" name="gender" value="female"></input>
-            <label for="gender" class="radio-label">
-              {" "}
-              female
-            </label>
-          </div>
         </div>
 
         <div className="row align-items-center">
@@ -146,8 +127,7 @@ function RegisterArea({ history, location }) {
             </div>
           </div>
         </div>
-    
-              
+
         <button type="submit">Register now</button>
       </form>
 
