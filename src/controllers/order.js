@@ -54,7 +54,6 @@ exports.addOrderInfo = async (req, res) => {
     res.status(200).json({
       message: "Order successfully added",
     });
-    console.log("Order successfully added")
   } catch (err) {
     res.status(500);
   }

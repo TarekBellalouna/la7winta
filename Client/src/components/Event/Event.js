@@ -1,7 +1,10 @@
 import React, { useState, useEffect,useRef } from "react";
 import { Link } from "react-router-dom";
 import { useParams} from "react-router";
-import axios from "axios"; 
+import axios from "axios";
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
 import Card from 'react-bootstrap/Card';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -16,7 +19,8 @@ import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
-import Collapse from '@mui/material/Collapse'; 
+import Collapse from '@mui/material/Collapse';
+import Avatar from '@mui/material/Avatar'; 
 import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
 

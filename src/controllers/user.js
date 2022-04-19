@@ -50,7 +50,7 @@ module.exports.forgetPassword = async (req, res) => {
     });
     const msg ={
       from:'nourelhouda.zemni@esprit.tn',
-      to:'nourelhouda.zemni@esprit.tn',
+      to:email,
       subject:`${subject}`,
       text:`Click here:${message}`
     }
@@ -134,7 +134,7 @@ module.exports.signIn = async (req, res) => {
   }
   catch(err){
     res.send(err)
-  }
+  } 
     
 };
 //////////////////////////////////////////////////////////
@@ -301,29 +301,20 @@ exports.checkRole = async (req, res) => {
 
 exports.passwordReset = async (req, res) => {
   try {
-    const email = req.body.email;
-    const password = req.body.password;
-    const newpassword = req.body.newpassword;
+    const user_id = req.body.user_id;
+    const newpassword = req.body.password1;
 
     //check user email
-    const user = await User.findOne({ email });
-
+    const user = await User.findOne({ _id:user_id });
+    
     if (!user) {
       return res.status(401).json({
-        error: "Email isn't matched",
-      });
-    }
-
-    const isEqual = await bcrypt.compare(password, user.password);
-
-    if (!isEqual) {
-      return res.status(401).json({
-        error: "Email or password isn't matched",
+        error: "User does not exist",
       });
     }
 
     const hashedPassword = await bcrypt.hash(newpassword, 12);
-
+    console.log(newpassword)
     user.password = hashedPassword;
     const updateUserPassword = await user.save()
     const token = genAccTkn.generateAccessToken(user);
@@ -400,9 +391,28 @@ module.exports.updateUserProfile = (async (req, res) => {
      }else{
        result=OldUserPassword.profile_picture
      }
-console.log(await bcrypt.compare(req.body.old_Password,OldUserPassword.password))
-  const isPasswordMatch = await bcrypt.compare(req.body.old_Password,OldUserPassword.password)
+ 
+ 
   // await bcrypt.compare(req.body.old_Password,OldUserPassword)
+ console.log(req.body.old_Password===null)
+  if(!req.body.old_Password && OldUserPassword ){
+    console.log("ff")
+    const user = await User.findByIdAndUpdate(req.params.id,{
+      $set:{
+        ...req.body,
+        profile_picture: result.secure_url?result.secure_url:OldUserPassword.profile_picture,
+      cloudinary_user: result.public_id?result.public_id:OldUserPassword.cloudinary_user,
+      }
+  
+      },
+      {new:true}
+     
+    );
+    console.log(user)
+    res.status(200).send({message:"Profile Updated",user:user})
+  }else{
+    
+    const isPasswordMatch = await bcrypt.compare(req.body.old_Password,OldUserPassword.password)
   if(isPasswordMatch){
     const currentPassword=await bcrypt.hash(req.body.password,10);
   const user = await User.findByIdAndUpdate(req.params.id,{
@@ -417,7 +427,8 @@ console.log(await bcrypt.compare(req.body.old_Password,OldUserPassword.password)
       location: req.body.location,
     }
 
-    }
+    },
+    {new:true}
    
   );
   if(!user){
@@ -431,9 +442,9 @@ console.log(await bcrypt.compare(req.body.old_Password,OldUserPassword.password)
    
     res.status(409).send({ message:"old password incorrect"})
    
-  }
+  }}
 
-   
+
   
 
 }catch(error){
@@ -443,27 +454,5 @@ console.log(await bcrypt.compare(req.body.old_Password,OldUserPassword.password)
  
  
 }
-    
-  // if (user) {
-  //   user.name = req.body.name || user.name;
-  //   user.email = req.body.email || user.email;
-  //   user.pic = req.body.pic || user.pic;
-  //   if (req.body.password) {
-  //     user.password = req.body.password;
-  //   }
-
-  //   const updatedUser = await user.save();
-
-  //   res.json({
-  //     _id: updatedUser._id,
-  //     name: updatedUser.name,
-  //     email: updatedUser.email,
-  //     pic: updatedUser.pic,
-  //     isAdmin: updatedUser.isAdmin,
-  //     token: generateToken(updatedUser._id),
-  //   });
-  // } else {
-  //   res.status(404);
-  //   throw new Error("User Not Found");
-  // }
+     
 });

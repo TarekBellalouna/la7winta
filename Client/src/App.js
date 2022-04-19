@@ -1,16 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-//Nour
-import DonationList from "./components/Donation/DonationList";
-import EditEvent from "./components/Event/EditEvent"; 
-import Event from "./components/Event/Event"; 
-
-import EventList from "./components/Event/EventList";
-import MyEvents from "./components/Event/MyEvents";
-
 import CreateEvent from "./components/Event/CreateEvent";
-///
 import Home from "./pages/Home/Home";
 import HomeTwo from "./pages/Home/HomeTwo";
 import HomeThree from "./pages/Home/HomeThree";
@@ -48,7 +39,8 @@ import BlogRightSidebar from "./pages/Blog/BlogRightSidebar";
 import BlogFullWidth from "./pages/Blog/BlogFullWidth";
 import BlogDetails from "./pages/Blog/BlogDetails";
 import AddProduct from "./pages/Products/AddProduct";
-import User from "./pages/User/User";
+import User from "./pages/User/User.js";
+import Admin from "./pages/User/Admin.js";
 import Products from "./pages/Products/Products";
 import ComingSoon from "./pages/About/ComingSoon";
 
@@ -59,26 +51,44 @@ import MiddleHeader from "./components/Layout/MiddleHeader";
 import ShopArea from "./components/Shop/ShopArea";
 import Navbar from "./components/Layout/Navbar";
 import TopHeader from "./components/Layout/TopHeader";
-import BarChart from "./components/Charts/BarChart";
-import AddAuction from "./pages/Auctions/AddAuction";
-import Auctions from "./pages/Auctions/Auctions";
-import AuctionsDetails from "./pages/Auctions/AuctionsDetails";
+import { useSelector } from 'react-redux'
+///////
+//import Donation from "./components/Donation/Donation";
 
+import DonationList from "./components/Donation/DonationList";
+import EditEvent from "./components/Event/EditEvent"; 
+import Event from "./components/Event/Event"; 
+
+import EventList from "./components/Event/EventList";
+import MyEvents from "./components/Event/MyEvents";
+import PasswordResetArea from "./components/Auth/PasswordResetArea";
+import ForgetPassword from "./pages/Authentications/Forgetpassword";
 
 
 function App() {
+  const { userToken } = useSelector(state => state.userReducer)
+  
+
   const [token, setToken] = useState(null);
   const [userId, setUserId] = useState("");
   const [tokenExpiration, setTokenExpiration] = useState("");
   const [cartItems, setCartItems] = useState([]);
-  const [test,setTest] = useState(null);
-
+  const [test, setTest] = useState(null);
+  
   useEffect(() => {
-    const _token = JSON.parse(localStorage.getItem("token"));
+    setToken(userToken)
+    console.log("token", token)
+    console.log("user appp", userToken)
+  }, [userToken])
+  useEffect(() => {
+    console.log("localStorage", localStorage)
+    // const _token = userToken;
+    // console.log("_token", userToken)
+
     const tokenExp = JSON.parse(localStorage.getItem("tokenExpiration"));
     const userIdLocal = JSON.parse(localStorage.getItem("userId"));
-    if (_token && userIdLocal && tokenExp) {
-      setToken(_token);
+    if (userToken && userIdLocal && tokenExp) {
+      setToken(userToken);
       setUserId(userIdLocal);
       setTokenExpiration(tokenExp);
     }
@@ -89,7 +99,7 @@ function App() {
   }, [test]);
 
   const login = (token, userId, tokenExpiratopn) => {
-    setToken(token);
+    setToken(userToken);
     setUserId(userId);
     setTokenExpiration(tokenExpiratopn);
   };
@@ -169,26 +179,12 @@ function App() {
               <Route path="/home-two" component={HomeTwo} />
               <Route path="/home-three" component={HomeThree} />
               <Route path="/home-four" component={HomeFour} />
-              <Route path="/about" component={About} />
+              <Route path="/about" compocnent={About} />
               <Route path="/our-team" component={OurTeam} />
               <Route path="/pricing-plans" component={PricingPlans} />
               <Route path="/search" component={Search} />
               <Route path="/contact" component={Contact} />
               <Route path="/faqs" component={Faqs} />
-              {!token && <Route path="/login" component={Login} />}
-              {!token && <Route path="/register" component={Register} />}
-{/* essayage  */}
-<Route exact path="/EventC"  component={CreateEvent} />
-              
-              <Route exact path="/AllEvents"  component={EventList} />
-              <Route exact path="/MyEvents"  component={MyEvents} />
- 
-              <Route exact path="/Event/:id" component={Event} />
-              <Route exact path="/EditEvent/:id" component={EditEvent} />
-              
-              <Route exact path="/donate/:id"  component={DonationList} />
-
-<Route path="/chart" component={BarChart} />
 
               <Route path="/my-account" component={MyAccount} />
               <Route path="/error-404" component={Error404} />
@@ -227,16 +223,26 @@ function App() {
               <Route path="/blog-full-width" component={BlogFullWidth} />
               <Route path="/blog-details" component={BlogDetails} />
               <Route path="/coming-soon" component={ComingSoon} />
-              {/* {token && <Route path="/add-product" component={AddProduct} />} */}
-              <Route path="/add-product" component={AddProduct} />
-              <Route path="/profile" component={User} />
-               <Route path="/products" component={Products} />
-              <Route path="/reset" component={ResetPassword} />
-              {/* Auctions*/}
-              <Route path="/auction" component={Auctions} />
-              <Route  path="/auctions-room/:auctionId" component={AuctionsDetails} /> 
-              <Route path="/add-auction" component={AddAuction} />
+              {token && <Route path="/add-product" component={AddProduct} />}
+              {userToken && <Route path="/profile" component={User}  />}
+              {token && <Route path="/products" component={Products} />}
+              {token && <Route path="/reset" component={ResetPassword} />}
+              {!token && <Route path="/login" component={Login} />}
+              {!token && <Route path="/register" component={Register} />}
 
+              {token &&<Route exact path="/EventC"  component={CreateEvent} />}
+              
+              <Route exact path="/AllEvents"  component={EventList} />
+              {token && <Route exact path="/MyEvents"  component={MyEvents} />}
+ 
+              <Route exact path="/Event/:id" component={Event} />
+              <Route exact path="/EditEvent/:id" component={EditEvent} />
+              
+              <Route exact path="/donate/:id"  component={DonationList} />
+              
+              <Route path='/admin' element={<Admin />} />
+              <Route exact path="/forget-password" component={ForgetPassword} />
+              <Route exact path="/reset-password/:id" component={PasswordResetArea} />
             </Switch>
           </div>
         </CartContext.Provider>

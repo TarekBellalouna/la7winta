@@ -27,26 +27,29 @@ function Products() {
     prod_color,
     prod_price,
     prod_instock,
+    imagePublicId,
+    prod_image_public_id
   ) => {
     const formData = new FormData();
     formData.append("product_id", prod_id);
     formData.append("product_name", prod_name);
     formData.append("product_description", prod_description);
+
     formData.append("product_type", prod_type);
     formData.append("product_color", prod_color);
     formData.append("product_price", prod_price);
     formData.append("total_in_stock", prod_instock);
-    formData.append("image", prod_image);
+    formData.append("image_public_id", prod_image);
+    formData.append("upload_preset", "econix");
 
     axios
-      .put("http://127.0.0.1:5000/products/edit-product/", formData, {
+      .post("/products/edit-product", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       })
       .then((res) => {
         if (res.data.message === "Product edited") {
-          console.log(formData,res.data)
           return axios.get("/products/").then((res) => {
             setProducts(res.data.products);
           });

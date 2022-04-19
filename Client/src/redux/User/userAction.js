@@ -22,6 +22,7 @@ import {
     UPDATE_ERROR, DELETE_USER
 } from './userConstants.js'
 import history from "../../history.js"
+import {Redirect } from "react-router"
 import axios from 'axios'
 
 export const register = (username, name, gender, phone, email, password, isAdmin,location) => async (dispatch) => {
@@ -42,7 +43,7 @@ export const register = (username, name, gender, phone, email, password, isAdmin
             type: USER_REGISTER_SUCCESS,
             payload: data
         })
-        history.push('/profile')
+      
     } catch (error) {
         dispatch({
             type: USER_REGISTER_FAIL,
@@ -67,11 +68,16 @@ export const login = (email, password) => async (dispatch) => {
         console.log(data)
         localStorage.setItem('token', JSON.stringify(data.token))
         localStorage.setItem('user', JSON.stringify(data))
-        history.push('/profile')
+        history.push("/profile")
+      
         dispatch({
             type: USER_LOGIN_SUCCESS,
             payload: data
         })
+        //? remove if crash 
+        window.location.reload()
+
+
     } catch (error) {
         dispatch({
             type: USER_LOGIN_FAIL,
@@ -165,13 +171,7 @@ export const updateProfile = (id,profile)=>async(dispatch)=>{
         console.log(res)
         if(res.status===200)
         {
-            localStorage.setItem('user', JSON.stringify({"username": res.data.user.username, "name": res.data.user.name,
- "phone":res.data.user.phone,
- "email":res.data.user.email,
- "location":res.data.user.location,
- "profile_picture": res.data.user.profile_picture,
- 
- }))
+            localStorage.setItem('user', JSON.stringify(res.data.user))
         }
         dispatch({
             type:UPDATE_PROFILE,

@@ -35,7 +35,13 @@ function ShopFullWidthArea({ products = [], showQuickView }) {
                   <div className="single-shop-products">
                     <div className="shop-products-image">
                       <Link to={`/products-details/${product._id}`}>
-                      <img src={product.image} width="300" alt="image" />
+                        <Image
+                          key={product._id}
+                          cloudName={process.env.REACT_APP_CLOUDINARY_NAME}
+                          publicId={product.image_public_id}
+                          width="300"
+                          crop="scale"
+                        />
                       </Link>
                       <div className="tag">New</div>
                       <ul className="shop-action">

@@ -1,31 +1,9 @@
 import { Link } from "react-router-dom";
 import { Image } from "cloudinary-react";
-import React , {useState,useEffect} from 'react';
-import {useDispatch,useSelector} from 'react-redux'
-import {listProducts} from '../../redux/Product/ProductAction'
-import {addParams} from '../../redux/search/searchActions.js'
-import axios from "axios";
+import React from 'react';
 
 function ShopArea({ products = [], addToCart, page, pages, keyword,showQuickView }) {
-  
-  const dispatch = useDispatch()
   const [current, setCurrent] =React.useState(page);
-  const [numViews, setNumViews] =React.useState(0);
-  
-  const addToWishList = async (prodId,userId) => await axios.post(`http://127.0.0.1:5000/products/wishList/${prodId}/${userId}`)
-  
-   const search = useSelector(state=>state.search)
-   const sortProducts = (e) => { 
-    dispatch(listProducts(search.keyword,search.pageNumber,e.target.value,search.searchByCat,search.searchByBrand));
-    dispatch(addParams(search.keyword, search.pageNumber,e.target.value,search.searchByCat,search.searchByBrand))
-   }
-
-  //  const handleNumViews = async (id,Views) =>{
-  //    setNumViews(Views++)
-  //   const {data} = await axios.put(`http://127.0.0.1:5000/numViews/${id}`,{numViews})
-
-  //  }
-
   return (
     <section className="shop-area bg-ffffff pt-50 pb-50">
       <div className="container">
@@ -37,13 +15,13 @@ function ShopArea({ products = [], addToCart, page, pages, keyword,showQuickView
 
             <div className="col-lg-3 col-md-3">
               <div className="products-ordering-list">
-                <select onChange={sortProducts} className="form-control">
-                  <option value="price">Sort by price: low to high</option>
-                  <option value="name">Default sorting</option>
-                  {/* <option>Sort by popularity</option> */}
-                  {/* <option >Sort by average rating</option> */}
-                  <option value="createdAt" >Sort by latest</option>
-                  <option value="-price" >Sort by price: high to low</option>
+                <select className="form-control">
+                  <option>Sort by price: low to high</option>
+                  <option>Default sorting</option>
+                  <option>Sort by popularity</option>
+                  <option>Sort by average rating</option>
+                  <option>Sort by latest</option>
+                  <option>Sort by price: high to low</option>
                 </select>
               </div>
             </div>
@@ -56,10 +34,15 @@ function ShopArea({ products = [], addToCart, page, pages, keyword,showQuickView
                 <div className="single-shop-products">
                   <div className="shop-products-image">
                     <Link to={`/products-details/${product._id}`}>
-                    
-                      <img src={product.image} width="300" alt="image" />
+                      <Image
+                        key={product._id}
+                        cloudName={process.env.REACT_APP_CLOUDINARY_NAME}
+                        publicId={product.image_public_id}
+                        width="300"
+                        crop="scale"
+                      />
                     </Link>
-                    <div className="tag">{product.discount!=0? "Discount" : "New"}</div>
+                    <div className="tag">New</div>
                     <ul className="shop-action">
                       <li>
                         <span
@@ -70,9 +53,9 @@ function ShopArea({ products = [], addToCart, page, pages, keyword,showQuickView
                         </span>
                       </li>
                       <li>
-                          <span className="addtocart-icon-wrap" onClick={()=>{addToWishList(product._id,"624b555e02cd4d5308819f99")}}>
-                            <i className="flaticon-heart"></i>
-                            </span>
+                        <Link to="#">
+                          <i className="flaticon-heart"></i>
+                        </Link>
                       </li>
                       <li>
                         <span
@@ -89,7 +72,7 @@ function ShopArea({ products = [], addToCart, page, pages, keyword,showQuickView
 
                   <div className="shop-products-content">
                     <h3>
-                      <Link to={`/products-details/${product._id}`}  >
+                      <Link to={`/products-details/${product._id}`}>
                         {product.name}
                       </Link>
                     </h3>
@@ -110,7 +93,7 @@ function ShopArea({ products = [], addToCart, page, pages, keyword,showQuickView
                         <i className="bx bxs-star"></i>
                       </li>
                     </ul>
-                    <span>{product.price-(product.price*product.discount)+"DT"}</span>
+                    <span>$150.00</span>
                   </div>
                 </div>
               </div>

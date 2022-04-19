@@ -147,11 +147,11 @@ const userReducer = (state = INITIAL_STATE, action) => {
                 error: action.payload
             }
             case UPDATE_PROFILE:
-                console.log(action.payload)
+          
                 return{
                     ...state,
                     profileUpdated:action.payload,
-                    user:localStorage.getItem('user')
+                    
                 }
                 case UPDATE_ERROR:
                     return{

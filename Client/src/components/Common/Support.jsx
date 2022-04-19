@@ -11,7 +11,7 @@ function Support({ paddingClass = null }) {
                 </div>
 
                 <div className="support-content">
-                  <h3>Free Shipping Worldwide</h3>
+                  <h3> </h3>
                 </div>
               </div>
             </div>

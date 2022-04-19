@@ -1,69 +1,98 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require('path');
+const cors = require("cors");
 const db = require("./config/db");
 const productRoutes = require("./routings/product");
 const userRoutes = require("./routings/user");
-const brandRoutes = require("./routings/brand")
-const categoryRoutes = require("./routings/category")
 const orderRoutes = require("./routings/order");
-const couponRoutes = require("./routings/coupon");
-const stripeRoutes = require("./routings/stripe");
-const auctionRoutes = require("./routings/auction");
-const ratingRoutes = require("./routings/rating");
-const commentRoutes = require("./routings/comment");
-
-const production = process.env.NODE_ENV === "production";
-//Event
-//login
-const dotenv = require('dotenv'); 
-//const { OAuth2Client } = require('google-auth-library');
 
 const User = require("./models/User");
+
+//login
+const dotenv = require('dotenv'); 
+const { OAuth2Client } = require('google-auth-library');
+//
 const eventRoutes = require("./routings/event");
 const donationRoutes = require("./routings/donation");
+
+const production = process.env.NODE_ENV === "production";
+
 require("dotenv").config();
-const cors = require('cors')
+
+
+const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_CLIENT_ID);
 
 const app = express();
-app.use(express.json())
 
 production && app.use(express.static(path.join(__dirname, "../client/build")));
-//nour
+
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
     extended: true,
   })
 );
-// app.use('/uploads',express.static('uploads'))
-app.use('/uploads',express.static('uploads'))
-app.use(cors())
+const users = [];
+//login
+function upsert(array, item) {
+  const i = array.findIndex((_item) => _item.email === item.email);
+  if (i > -1) array[i] = item;
+  else array.push(item);
+}
+app.post('/api/google-login', async (req, res) => {
+  const { token } = req.body;
+  const ticket = await client.verifyIdToken({
+    idToken: token,
+    audience: process.env.CLIENT_ID,
+  });
+  const { name, email, picture } = ticket.getPayload();
+  upsert(users, { name, email, picture });
+  res.status(201);
+  res.json({ name, email, picture });
+});
 
-app.use(express.urlencoded({ extended: true }));
+
 
 // database connection
 db.makeDb();
-//Event
+
+app.use("/products", productRoutes);
+app.use("/user", userRoutes);
+app.use("/order", orderRoutes);
 
 app.use("/donation", donationRoutes);
 app.use("/event", eventRoutes);
-//
-app.use("/products", productRoutes);
-app.use("/brand", brandRoutes);
-app.use("/category", categoryRoutes);
-app.use("/user", userRoutes);
-app.use("/order", orderRoutes);
-app.use("/coupon", couponRoutes);
-app.use("/stripe", stripeRoutes);
-app.use("/auction", auctionRoutes);
-app.use("/ratings", ratingRoutes);
-app.use("/comments", commentRoutes);
+app.use(cors());
+///////////////////////GET
+///////////////////////////
 
 production && (
   app.get("/*", (req, res) => {
     res.sendFile(path.join(__dirname, "../client/build", "index.html"));
   })
 )
+
+
+
+
+////////////
+
+app.get('/getUsers', async (req,res) => {
+  const users = await User.find({})
+  try{
+      res.status(200).json({
+          status : 'Success',
+          data : {
+              users
+          }
+      })
+  }catch(err){
+      res.status(500).json({
+          status: 'Failed',
+          message : err
+      })
+  }
+})
 
 app.listen(process.env.PORT || 5000);

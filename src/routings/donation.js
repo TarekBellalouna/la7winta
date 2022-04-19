@@ -47,29 +47,7 @@ router.get('/', (req, res) => {
     });
 });
 
-router.put('/update/:id', (req, res) => {
-    Donation.findByIdAndUpdate(
-req.params.id,
-{
-    $set: req.body,
-},
-    (err, donation) => {
-        if (err) return res.status(400).json({success: false , err});
-        return res.status(200).json({success: true});
-    }
-    );
-});
-
-router.delete('/delete/:id', (req, res) => {
-    Donation.findByIdAndRemove(req.params.id).exec((err, deleteDo) => {
-        if (err) {
-            res.send(err)
-        }
-        else{
-            res.send(deleteDo)
-        }
-    }) 
-});
+  
 
 
  module.exports = router;

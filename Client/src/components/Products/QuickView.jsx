@@ -31,7 +31,13 @@ function QuickView({ isOpen, closeModal, product }) {
         <Container>
           <Row>
             <Col xs={12} md={6}>
-              <img src={product.image} alt={product.description} />
+              <Image
+                key={product._id}
+                cloudName={process.env.REACT_APP_CLOUDINARY_NAME}
+                publicId={product.image_public_id}
+                width="470"
+                crop="scale"
+              />
             </Col>
             <Col xs={6} md={6}>
               <Modal.Title>{product.name}</Modal.Title>
@@ -46,7 +52,7 @@ function QuickView({ isOpen, closeModal, product }) {
               </div>
 
               <div className="price">
-               {product.discount ? <span className="old-price">{product.price-(product.price*product.discount)+"DT"}</span>: ""}
+                <span className="old-price">$150.00</span>
                 <span className="new-price">${product.price}</span>
               </div>
 

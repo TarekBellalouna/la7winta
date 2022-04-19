@@ -8,11 +8,16 @@ import portugal from "../../assets/img/portugal.png";
 import china from "../../assets/img/china.png";
 import "./TopHeader.scss";
 
+import { useDispatch } from "react-redux";
+import { logout } from "../../redux/User/userAction.js";
+
 function TopHeader({ shippingMessage, history }) {
   const context = useContext(AuthContext);
 
+  const dispatch = useDispatch();
+
   const handleLogout = () => {
-    context.logout();
+    dispatch(logout());
     history.push("/login");
   };
 

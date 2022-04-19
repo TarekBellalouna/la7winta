@@ -65,9 +65,10 @@ function User({ match, history }) {
  form.append("phone",phone);
  form.append("email",email);
  form.append("location",location);
- form.append("old_Password",password);
+ if(password)
+{ form.append("old_Password",password);
  
- form.append("password",newPassword);
+ form.append("password",newPassword);}
  if(file)
 form.append("image", file)
 else
@@ -145,6 +146,7 @@ dispatch(updateProfile(id,form))
 
 
   useEffect(() => {
+   
     setLocation(user.location)
     setUsername(user.username) 
     setName(user.name)
@@ -152,13 +154,12 @@ dispatch(updateProfile(id,form))
     setEmail(user.email)
     console.log(file)
     console.log(location)
-  }, []);
-
+  }, [user ,profileUpdated]);
 useEffect(() => {
   if(profileUpdated.status===200){
     toast.success("Profile Updated")
 
-    
+         window.location.reload()
 
 //  setLocation(profileUpdated.data.user.location)
 //     setUsername(profileUpdated.data.user.username) 
@@ -201,8 +202,7 @@ pauseOnHover
             </div>
             <input type="file"  onChange={onChangeHandler} className="mt-3" />
           </div>
-          <button variant='primary' onClick={UpdateProfileHandler}>Upload Image</button>
-        </center>
+         </center>
         </div>
         
       ) : (
@@ -295,7 +295,7 @@ pauseOnHover
 </form>
 
               
-                <button      onClick={()=>{dispatch(removeUser(user._id))}}>Delete User </button>
+                <button      onClick={()=>{dispatch(removeUser(user._id))}}>Desactivate my account </button>
                
               
           {user.role === "user" &&

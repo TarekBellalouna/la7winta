@@ -127,7 +127,7 @@ exports.getUserEvent = async(req,res) => {
     searchValue=req.query.searchValue
    
     try {
-        res.status(200).send(await Event.find({user:idUser,title:new RegExp(`^${searchValue}`,"i")}).populate("likes").populate("Donations").sort({LikesNumber:1}));
+        res.status(200).send(await Event.find({user:idUser,title:new RegExp(`^${searchValue}`,"i")}).populate("likes").populate("Donations").populate("user").sort({LikesNumber:1}));
     } catch (error) {
         res.status(500).send({error:error})
     }
@@ -135,14 +135,7 @@ exports.getUserEvent = async(req,res) => {
     
 }
 ////////////////////////////////////////////////////
-exports.findById = async(req,res) => {
- try {
-    await Event.findOne({_id:req.params.id}).populate({path:'user'}).populate("Donations").populate({path:"likes"}) 
-    return res.status(200).json(Event);
- } catch (error) {
-     res.send(error)
- }
-}
+ 
 exports.findById2 = async(req,res) => {
     await Event.findOne({_id:req.params.id}).populate('User').populate("Donations").then(Event=>{
         return res.status(200).json(Event);

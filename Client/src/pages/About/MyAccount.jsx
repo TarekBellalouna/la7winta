@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Preloader from "../../components/Common/Preloader";
-import LoginArea from "../../components/Auth/LoginArea";
+import LoginArea from "../../components/Auth/LoginArea.js";
 import RegisterArea from "../../components/Auth/RegisterArea";
 import PageTitle from "../../components/Common/PageTitle";
 import Support from "../../components/Common/Support";

@@ -1,14 +1,17 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { Link, NavLink, useLocation, useHistory } from "react-router-dom";
-import {listProducts} from '../../redux/Product/ProductAction'
-import {useDispatch,useSelector} from 'react-redux'
+import { dispatch } from "react-hot-toast";
+import { Link, NavLink, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
 import logo2 from "../../assets/img/logo-2.png";
 import AuthContext from "../../contexts/auth-context";
-import {addParams} from '../../redux/search/searchActions.js'
+import { logout } from "../../redux/User/userAction.js";
+import { useSelector } from "react-redux";
 
-// const homeRoutes = ["/", "/home-two", "/home-three", "/home-four"];
-const homeRoutes = ["/"];
+import history from "../../history.js";
+
+const homeRoutes = ["/", "/home-two", "/home-three", "/home-four"];
 const pagesRoutes = [
   "/about",
   "/our-team",
@@ -46,40 +49,30 @@ const blogRoutes = [
   "/blog-details",
 ];
 const productsRoutes = ["/products", "/add-product"];
-function Navbar() {
-  const [user, setUser] = useState({});
+
+function Navbar({ location }) {
+  // const [user, setUser] = useState({});
   const [visible, setVisible] = useState(false);
   const { pathname } = useLocation();
   const context = useContext(AuthContext);
-  const dispatch = useDispatch()
-  const history = useHistory();
+  // const history = useHistory();
   const [active, setActive] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
-  const [brandList,setBrandList] = useState([])
-  const search = useSelector(state=>state.search)
-   const handleOption = (brand) => { 
-    dispatch(listProducts(search.keyword,search.pageNumber,search.sortBy,search.searchByCat,brand));
-    dispatch(addParams(search.keyword,search.pageNumber,search.sortBy,search.searchByCat,brand))
-   }
 
-  useEffect(() => {
-    if (context && context.userId) {
-      axios
-        .get(`/user/${context.userId}`)
-        .then((res) => {
-          setUser(res.data.user);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-    const getData = async() => { 
-      const {data} = await axios.get(`http://127.0.0.1:5000/brand`)
-    console.log(data)
-    setBrandList(data)
-     }
-     getData()
-  }, [context]);
+  const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   if (context && context.userId) {
+  //     axios
+  //       .get(`/user/${context.userId}`)
+  //       .then((res) => {
+  //         setUser(res.data.user);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   }
+  // }, [context]);
 
   const toggleHotline = () => {
     setActive(!active);
@@ -106,9 +99,19 @@ function Navbar() {
   }, [visible, handleScroll]);
 
   const handleLogout = () => {
-    context.logout();
+    dispatch(logout());
     history.push("/login");
   };
+
+  const { user } = useSelector((state) => state.userReducer);
+
+  // const redirect = location.search ? location.search.split("=")[1] : "/";
+
+  // useEffect(() => {
+  //   if (!user) {
+  //     history.push("/login");
+  //   }
+  // }, [user]);
 
   return (
     <div className={`navbar-area ${visible ? "is-sticky sticky-active" : ""}`}>
@@ -121,17 +124,78 @@ function Navbar() {
                   <li className="nav-item respo-nav">
                     <a href="#" className="nav-link">
                       <i className="bx bx-menu"></i>
-                      All Brands
+                      All Categories
                     </a>
                     <ul className="dropdown-menu">
-                      {brandList?.map(brand=>(
-                         <li className="nav-item d-flex align-content-center w-4 ">
-                         <Link to={`/shop/#`} onClick={()=>handleOption(brand.name)} className="nav-link">
-                           <img src={brand.image} width="20" height="20" alt='rand'/>
-                           {brand.name}
-                         </Link>
-                       </li>
-                      ))}
+                      <li className="nav-item">
+                        <Link to="/shop/camera" className="nav-link">
+                          <i className="flaticon-camera"></i>
+                          Cameras
+                        </Link>
+                      </li>
+
+                      <li className="nav-item">
+                        <Link to="/shop/speaker" className="nav-link">
+                          <i className="flaticon-stereo"></i>
+                          Audio
+                        </Link>
+                      </li>
+
+                      <li className="nav-item">
+                        <Link to="/shop/tv" className="nav-link">
+                          <i className="flaticon-tv-box"></i>
+                          TV
+                        </Link>
+                      </li>
+
+                      <li className="nav-item">
+                        <Link to="/shop/phone" className="nav-link">
+                          <i className="flaticon-smartphone"></i>
+                          Mobiles
+                        </Link>
+                      </li>
+
+                      <li className="nav-item">
+                        <Link to="/shop/headphone" className="nav-link">
+                          <i className="flaticon-headphones"></i>
+                          Headphone
+                        </Link>
+                      </li>
+
+                      <li className="nav-item">
+                        <Link to="/shop/watch" className="nav-link">
+                          <i className="flaticon-smart-watch"></i>
+                          Watches
+                        </Link>
+                      </li>
+
+                      <li className="nav-item">
+                        <Link to="/shop/computer" className="nav-link">
+                          <i className="flaticon-desktop-computer"></i>
+                          Computers
+                        </Link>
+                      </li>
+
+                      <li className="nav-item">
+                        <Link to="/shop/computer" className="nav-link">
+                          <i className="flaticon-laptop"></i>
+                          Laptop
+                        </Link>
+                      </li>
+
+                      <li className="nav-item">
+                        <Link to="/shop/battery" className="nav-link">
+                          <i className="flaticon-battery-charge"></i>
+                          Battery
+                        </Link>
+                      </li>
+
+                      <li className="nav-item">
+                        <Link to="/shop/accesories" className="nav-link">
+                          <i className="flaticon-trimmer"></i>
+                          Accessories
+                        </Link>
+                      </li>
                     </ul>
                   </li>
                 </ul>
@@ -146,11 +210,9 @@ function Navbar() {
                     isActive={() => homeRoutes.includes(pathname)}
                     className="nav-link"
                   >
-                    Home
-                     {/* <i className="bx bx-chevron-down chevron-display"></i> */}
+                    Home <i className="bx bx-chevron-down chevron-display"></i>
                     <span className="plus_icon">+</span>
                   </NavLink>
-                   {/*
                   <ul className="dropdown-menu">
                     <li className="nav-item">
                       <NavLink to={"/"} className="nav-link">
@@ -175,7 +237,7 @@ function Navbar() {
                         Home Four
                       </NavLink>
                     </li>
-                  </ul> */}
+                  </ul>
                 </li>
 
                 <li className="nav-item megamenu">
@@ -315,28 +377,17 @@ function Navbar() {
                     </li>
                   </ul>
                 </li>
-                <li className="nav-item">
-                  <NavLink
-                    to={"/auction"}
-                    isActive={() => homeRoutes.includes(pathname)}
-                    className="nav-link"
-                  >
-                    Auctions 
-                    {/* <i className="bx bx-chevron-down chevron-display"></i>
-                    <span className="plus_icon">+</span> */}
-                  </NavLink>
-                   </li>             
+
                 <li className="nav-item">
                   <NavLink
                     to="/shop"
                     isActive={() => shopRoutes.includes(pathname)}
                     className="nav-link"
                   >
-                    Shop
-                     {/* <i className="bx bx-chevron-down chevron-display"></i>
-                    <span className="plus_icon">+</span> */}
+                    Shop <i className="bx bx-chevron-down chevron-display"></i>
+                    <span className="plus_icon">+</span>
                   </NavLink>
-                  {/* <ul className="dropdown-menu">
+                  <ul className="dropdown-menu">
                     <li className="nav-item">
                       <NavLink to="/shop" className="nav-link">
                         Shop
@@ -384,7 +435,7 @@ function Navbar() {
                         Checkout
                       </NavLink>
                     </li>
-                  </ul> */}
+                  </ul>
                 </li>
 
                 <li className="nav-item">
@@ -393,11 +444,10 @@ function Navbar() {
                     isActive={() => blogRoutes.includes(pathname)}
                     className="nav-link"
                   >
-                    Blog 
-                    {/* <i className="bx bx-chevron-down chevron-display"></i>
-                    <span className="plus_icon">+</span> */}
+                    Blog <i className="bx bx-chevron-down chevron-display"></i>
+                    <span className="plus_icon">+</span>
                   </NavLink>
-                  {/* <ul className="dropdown-menu">
+                  <ul className="dropdown-menu">
                     <li className="nav-item">
                       <NavLink to="/blog" className="nav-link">
                         Blog
@@ -433,7 +483,7 @@ function Navbar() {
                         Blog Details
                       </NavLink>
                     </li>
-                  </ul> */}
+                  </ul>
                 </li>
 
                 <li className="nav-item">
@@ -441,8 +491,34 @@ function Navbar() {
                     Contact
                   </NavLink>
                 </li>
-{/*Nour */ }
-<li className="nav-item">
+   
+                <li className="nav-item">
+                  <NavLink
+                    to="/"
+                    isActive={() => blogRoutes.includes(pathname)}
+                    className="nav-link"  >
+                    Donation <i className="bx bx-chevron-down chevron-display"></i>
+                    <span className="plus_icon">+</span>
+                  </NavLink>
+                  <ul className="dropdown-menu">
+               
+                <li className="nav-item">
+                  <NavLink to="/AddDonate" className="nav-link">
+                   doante 
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                      <NavLink to="/AllDonations" className="nav-link">
+                        All donations
+                      </NavLink>
+                    </li>
+
+</ul></li>
+
+
+
+
+                <li className="nav-item">
                   <NavLink
                     to="/"
                     isActive={() => blogRoutes.includes(pathname)}
@@ -471,7 +547,8 @@ function Navbar() {
 
 </ul></li>
 
-                {!context.token && (
+
+                {context.token && (
                   <>
                     {/* <li className="nav-item">
                       <NavLink
@@ -577,7 +654,7 @@ function Navbar() {
       <div className="others-option-for-responsive">
         <div className="container">
           <div className="responsive-logo">
-            <span>Econix</span>
+            <span>le7winta</span>
           </div>
           <div className="dot-menu" onClick={() => toggleHotline()}>
             <div className="inner">

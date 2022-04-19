@@ -2,37 +2,33 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const productSchema = new Schema({
-  user: {
-    type:Schema.Types.ObjectId,
-    ref :'User',
-  },
   name: {
     type: String,
-    required: false,
+    required: true,
   },
   description: {
     type: String,
-    required: false,
+    required: true,
   },
   type: {
     type: String,
-    required: false,
+    required: true,
   },
-  brandId:{
-    type:Schema.Types.ObjectId,
-    ref :'Brand',
-  },
-  image: {
+  images: {
     type: String,
-    required: false,
+    required: true,
+  },
+  image_public_id: {
+    type: String,
+    required: false
   },
   price: {
     type: String,
-    required: false,
+    required: true,
   },
   color: {
     type: String,
-    required: false,
+    required: true,
   },
   ratings: {
     type: String,
@@ -49,28 +45,12 @@ const productSchema = new Schema({
   ],
   total_in_stock: {
     type: Number,
-    required: false,
+    required: true,
   },
   createdAt: {
-    type:Date,
-    default: Date.now
+    type: String,
+    required: true,
   },
-  updatedAt: {
-    type:Date,
-    default: Date.now
-  },
-  numViews: {
-    type:Number,
-    default: 0
-  },
-  gender : {
-    type:String,
-    required: false
-  },
-  discount : {
-    type : Number ,
-    default : 0
-  }
 });
 
 module.exports = mongoose.model("Product", productSchema);

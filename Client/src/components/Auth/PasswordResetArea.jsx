@@ -1,19 +1,19 @@
 import { set } from "mongoose";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
+import {useParams} from "react-router";
 //actions
 import { passwordReset } from "../../redux/ResetPassword/PasswordAction";
 
 const PasswordResetArea = () => {
   const dispatch = useDispatch();
   const { message } = useSelector((state) => state.PasswordReducer);
-  console.log("pass", message);
-
+  
+  const params = useParams();
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    newpassword: "",
+    user_id: params.id,
+    password1: "",
+    password2: "",
   });
 
   const onChange = (e) =>
@@ -21,14 +21,19 @@ const PasswordResetArea = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    if((formData.password1===formData.password2)&&(formData.password1!=="")&&(formData.password2!=="")){
+      dispatch(passwordReset({ ...formData }));
 
-    dispatch(passwordReset({ ...formData }));
-
-    setFormData({
-        email: "",
-        password: "",
-        newpassword: ""
-    });
+      setFormData({
+        user_id: params.id,
+        password1: "",
+        password2: "",
+      });
+    }
+    else{
+      alert("Password Invalide!")
+    }
+    
 
   };
 
@@ -48,11 +53,11 @@ const PasswordResetArea = () => {
             <form onSubmit={(e) => onSubmit(e)}>
               <div className="form-group">
                 <input
-                  type="email"
+                  type="password"
                   className="form-control"
-                  placeholder="Email"
-                  name="email"
-                  value = {formData.email}
+                  placeholder="Password"
+                  name="password1"
+                  value = {formData.password1}
                   onChange={(e) => onChange(e)}
                 />
               </div>
@@ -61,20 +66,9 @@ const PasswordResetArea = () => {
                 <input
                   type="password"
                   className="form-control"
-                  placeholder="Current Password"
-                  name="password"
-                  value = {formData.password}
-                  onChange={(e) => onChange(e)}
-                />
-              </div>
-
-              <div className="form-group">
-                <input
-                  type="password"
-                  className="form-control"
-                  placeholder="New Password"
-                  value={formData.newpassword}
-                  name="newpassword"
+                  placeholder="repeat Password"
+                  value={formData.password2}
+                  name="password2"
                   onChange={(e) => onChange(e)}
                 />
               </div>

@@ -16,7 +16,7 @@ function ProductsArea({ products, history, editProduct, deleteProduct }) {
   const [role, setRole] = useState("user");
   const [product, setProduct] = useState({});
   const [imagePublicId, setImagePublicId] = useState(null);
-  const [product_image, setProductImages] = useState("");
+  const [product_images, setProductImages] = useState("");
   const context = useContext(authContext);
 
   useEffect(() => {
@@ -37,16 +37,16 @@ function ProductsArea({ products, history, editProduct, deleteProduct }) {
     setImagePublicId(imagePublicId);
   };
 
-  const openEditModal = (product) => {
+  const openEditModal = (product, imagePublicId) => {
     setProduct(product);
     setName(product.name);
     setDescription(product.description);
-    setProductImages(product.image);
+    setProductImages(product.image_public_id);
     setType(product.type);
     setColor(product.color);
     setPrice(product.price);
     setInStock(product.total_in_stock);
-    setImage(product.image);
+    setImagePublicId(imagePublicId);
   };
 
 
@@ -55,16 +55,21 @@ function ProductsArea({ products, history, editProduct, deleteProduct }) {
 
     const image = e.target.files[0];
     const formData = new FormData();
-    formData.append("image", image);
+    formData.append("file", image);
+    formData.append("upload_preset", "econix");
     const config = {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     };
 
-   
+    const { data } = await axios.post(
+      "https://api.cloudinary.com/v1_1/dfmn9nhqt/image/upload",
+      formData,
+      config
+    );
 
-    setProductImages(image);
+    setProductImages(data.public_id);
   };
 
   return (
@@ -86,7 +91,13 @@ function ProductsArea({ products, history, editProduct, deleteProduct }) {
                   return (
                     <tr key={product._id} className="product_tr">
                       <td className="order_column1">
-                        <img src={product.image} width="50" alt="product image" />
+                        <Image
+                          key={index}
+                          cloudName={process.env.REACT_APP_CLOUDINARY_NAME}
+                          publicId={product.image_public_id}
+                          width="50"
+                          crop="scale"
+                        />
                       </td>
                       <td
                         onClick={() => goToDetails(product._id)}
@@ -283,7 +294,7 @@ function ProductsArea({ products, history, editProduct, deleteProduct }) {
                         product._id,
                         name,
                         description,
-                        product_image,
+                        product_images,
                         type,
                         color,
                         price,

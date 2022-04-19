@@ -1,39 +1,10 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Image } from "cloudinary-react";
 import { Link } from "react-router-dom";
-import StripeCheckout from 'react-stripe-checkout';
+
 import CartContext from "../../contexts/cart-context";
-import axios from 'axios';
-
-const KEY = "pk_test_51KhtEeEH3igSvawdpmzWGHuHvEuB0URizBnJ7Y7hm6vYH7weE9b7NGZfkhYIc3ixuE85loj2p3Ox6mF0KCrEgn1b00ptCX1Iux"
-
 
 function CartArea() {
-  const [stripeToken, setStripeToken] = useState(null);
-
-  const onToken = (token) =>{
-      console.log(token);
-      setStripeToken(token);
-  }
-  
-  
-  
-  useEffect(()=>{
-    const makeRequest = async ()=>{
-      try{
-        const res = await axios.post("http://localhost:5000/stripe/payment", {
-          tokenId:stripeToken.id,
-          amount: 100,
-        })//.then((response)=>{console.log(response);})
-        console.log(res,"AAAAAAAAA");
-      }catch(err){
-        console.log("error react: ",err)
-      }
-    };
-    stripeToken && makeRequest();
-  },[stripeToken]);
-  
-
   const context = useContext(CartContext);
 
   const updateQuantity = (cartItem, quantity) => {
@@ -83,9 +54,16 @@ function CartArea() {
                               >
                                 <i className="bx bx-x"></i>
                               </span>
-                                  
                               <a href="#">
-                               <img src={cartItem.image} width="70" alt="" />
+                                <Image
+                                  key={cartItem._id}
+                                  cloudName={
+                                    process.env.REACT_APP_CLOUDINARY_NAME
+                                  }
+                                  publicId={cartItem.image_public_id}
+                                  width="70"
+                                  crop="scale"
+                                />
                               </a>
                             </td>
 
@@ -231,36 +209,6 @@ function CartArea() {
                 </li>
               </ul>
 
-            <StripeCheckout 
-            name="username"
-            billingAddress
-            shippingAddress
-            description={`Your total is $ ${((context.cartItems &&
-              context.cartItems.reduce((count, curItem) => {
-                return (
-                  count +
-                  parseInt(curItem.price) *
-                    parseInt(curItem.quantity || 0)
-                );
-              }, 0)) ||
-              0) + 30}`}
-            amount={((context.cartItems &&
-              context.cartItems.reduce((count, curItem) => {
-                return (
-                  count +
-                  parseInt(curItem.price) *
-                    parseInt(curItem.quantity || 0) * 100
-                );
-              }, 0)) ||
-              0) + 30 * 100}
-            token={onToken}
-            stripeKey={KEY}
-            >
-              <button style={{ cursor: "pointer" }} className="default-btn">Use Card</button>
-            </StripeCheckout>
-
-
-
               <button className="proceed_button">
                 {context.cartItems.length === 0 ? (
                   <Link
@@ -268,18 +216,16 @@ function CartArea() {
                     className="disable-btn"
                     onClick={(event) => event.preventDefault()}
                   >
-                    Cash On Delivery
+                    Proceed to Checkout
                     <span></span>
                   </Link>
                 ) : (
-                  
-                  <Link to="/checkout"className="default-btn">
-                    Cash On Delivery
+                  <Link to="/checkout" className="default-btn">
+                    Proceed to Checkout
                     <span></span>
                   </Link>
                 )}
               </button>
-              
             </div>
           </div>
         </div>

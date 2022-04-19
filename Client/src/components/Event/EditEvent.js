@@ -44,6 +44,8 @@ function EditEvent() {
     }
   };
   ///////////
+  
+
   useEffect(() => {
     if (!File) {
       return;
@@ -60,11 +62,11 @@ function EditEvent() {
     if((event.title==="") || (event.description==="")) {
       return alert("invalid Form!");
     }
-
+    const userId =JSON.parse(localStorage.getItem('user'))._id
     const form = new FormData();
     form.append('title' , event.title );
     form.append('description' , event.description );
-    
+    form.append('user' , userId );
     form.append('location' , event.description );
     form.append('Startdate' , event.Startdate );
     form.append('Enddate' , event.Enddate );
