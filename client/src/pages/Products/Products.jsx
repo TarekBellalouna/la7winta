@@ -75,7 +75,7 @@ function Products() {
     <div className="products-wrap">
       <PageTitle title="Products" />
       <ProductsArea
-        products={products}
+        auctions={products}
         editProduct={editProduct}
         deleteProduct={deleteProduct}
       />

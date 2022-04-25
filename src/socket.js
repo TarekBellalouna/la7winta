@@ -1,40 +1,30 @@
-const { Server } = require('socket.io');
-let io;
-let adIo;
+const express =require("express");
+const app = express();
+const http =require("http");
+const {Server}=require("socket.io");
+const cors =require("cors");
 
-exports.init = (server) => {
-  io = new Server(server, {
-    cors: {
-      origin: process.env.CLIENT_BASE_URL,
-      methods: ['*'],
-      allowedHeaders: ['*'],
-    },
-  });
-  return io;
-};
 
-exports.initAdIo = (server, path = '/socket/adpage') => {
-  adIo = new Server(server, {
-    cors: {
-      origin: process.env.CLIENT_BASE_URL,
-      methods: ['*'],
-      allowedHeaders: ['*'],
-    },
-    path: path,
-  });
-  return adIo;
-};
+app.use(cors());
 
-exports.getIo = () => {
-  if (!io) {
-    throw new Error('Socket.io not initialized');
-  }
-  return io;
-};
+const server=http.createServer(app);
 
-exports.getAdIo = () => {
-  if (!adIo) {
-    throw new Error('Socket.io not initialized');
-  }
-  return adIo;
-};
+const io = new Server(server,{
+  cors:{
+    origin:"http://localhost:3000",
+    methods:["GET","POST"],
+  },
+
+
+});
+
+io.on("connection",(socket)=>{
+  console.log(`User connected: ${socket.id}`);
+  socket.on("ss",(data)=>{
+    console.log(data)
+  })
+})
+
+
+
+

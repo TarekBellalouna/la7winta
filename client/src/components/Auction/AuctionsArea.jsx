@@ -5,6 +5,8 @@ import axios from "axios";
 import authContext from "../../contexts/auth-context";
 import Countdown from "react-countdown";
 
+import AuctionsDetailsArea from "./AuctionsDetailsArea";
+
 function AuctionsArea({  history, editAuction ,page, pages, keyword,showQuickView}) {
   const [auction, setAuction] = useState([]);
   const [delauction, setdelAuction] = useState({});
@@ -12,16 +14,18 @@ function AuctionsArea({  history, editAuction ,page, pages, keyword,showQuickVie
   const [description, setDescription] = useState("");
   const [Price, setPrice] = useState("");
   const [currentPrice, setcurrentPrice] = useState("");
-  const [duration, setDuration] = useState("");
+  const [duration, setDuration]  = useState({
+    days: '',
+    hours: '',
+    minutes: '',
+    seconds: '',
+  });
   const [catergory, setCategory] = useState("");
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState({});
 
 
-  const [days, setDays] = useState("");
-  const [hours, setHours] = useState("");
-  const [minutes, setMinutes] = useState("");
-  const [seconds, setSeconds] = useState("");
+
 
 
   const [product_images, setProductImages] = useState("");
@@ -52,18 +56,7 @@ function AuctionsArea({  history, editAuction ,page, pages, keyword,showQuickVie
   const openDeleteModal = (auction) => {
     
   };
-  const deleteAuction = (_id) => {
-    axios
-      .post(`/auction/delete-auction`, {
-        auctionId: _id,
-      })
-      .then((res) => {
-        if (res.data.message === "Successfully Deleted") {
-          setAuction(res.data.auctions);
-        }
-      })
-      .catch((err) => console.log(err));
-  };
+  
   const openEditModal = (auction, imagePublicId) => {
     
     setAuction(auction);
@@ -77,42 +70,14 @@ function AuctionsArea({  history, editAuction ,page, pages, keyword,showQuickVie
   };
 
 
-  const bidends = () => {
-    let endTime = new Date("August 23, 2022 17:00:00 PDT");
-    let endTimeParse = Date.parse(endTime) / 1000;
-    let now = new Date();
-    let nowParse = Date.parse(now) / 1000;
-    let timeLeft = endTimeParse - nowParse;
-    let countdays = Math.floor(timeLeft / 86400);
-    let counthours = Math.floor((timeLeft - countdays * 86400) / 3600);
-    let countminutes = Math.floor(
-      (timeLeft - countdays * 86400 - counthours * 3600) / 60
-    );
-    let countseconds = Math.floor(
-      timeLeft - countdays * 86400 - counthours * 3600 - countminutes * 60
-    );
-    if (counthours < "10") {
-      counthours = "0" + counthours;
-    }
-    if (countminutes < "10") {
-      countminutes = "0" + countminutes;
-    }
-    if (countseconds < "10") {
-      countseconds = "0" + countseconds;
-    }
-
-    setDays(countdays);
-    setHours(counthours);
-    setMinutes(countminutes);
-    setSeconds(countseconds);
-  };
-
   useEffect(() => {
     setInterval(() => {
-      bidends();
+      
     }, 1000);
   }, []);
 
+
+  let expiredDate = duration
 
 
   
@@ -191,12 +156,12 @@ function AuctionsArea({  history, editAuction ,page, pages, keyword,showQuickVie
                   <diV>
                  Duration <span>{auction.duration}</span>
                   </diV>   
+          
                       
                 </div>
               </div>
-              {/* test timer */}
 
-
+                    
               
 
             </div>

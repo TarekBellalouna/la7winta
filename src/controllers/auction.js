@@ -55,6 +55,7 @@ exports.fetchAuctions = async (req, res) => {
   }
 };
 
+
 exports.addAuction =  upload.single('image'),async (req, res) => {
   try {
     console.log(req)
@@ -132,12 +133,13 @@ exports.fetchAuction = async (req, res) => {
 
 exports.deleteAuction = async (req, res) => {
   try {
-    const auctionId = req.body.auctionId;
 
+    const auctionId = req.params.id;
     await Auction.deleteOne({ _id: auctionId });
-    const auctions = await Auction.find({});
 
-    return res.status(200).json({ message: "Successfully Deleted", auctions });
+    const auction = await Auction.findOneAndDelete(req.params.id);
+
+    return res.status(200).json({ message: "Successfully Deleted" });
   } catch (err) {
     res.status(500);
   }
@@ -146,7 +148,8 @@ exports.deleteAuction = async (req, res) => {
 
 exports.editAuction = async (req, res) => {
 
-  try {
+  try {    const id = req.params.auctionId;
+
     const {
     
     productName,
@@ -169,7 +172,7 @@ exports.editAuction = async (req, res) => {
   
     const image_public_id = req.body.image_public_id;
 
-    await Auction.updateOne(
+    await Auction.findByIdAndUpdate(id)(
       { _id: auctionId },
       {
         $set: {
@@ -217,7 +220,7 @@ exports.addbid = async (req, res) => {
 auctionId=req.params.auctionId;
   
 
-    await Auction.updateOne(
+     await Auction.updateOne(
       { _id: auctionId },
       {
         $set: {
@@ -227,6 +230,10 @@ auctionId=req.params.auctionId;
         },
       }
     );
+    console.log(auctionId)
+    const auction = await Auction.findById(auctionId)
+    const price = auction.currentPrice
+    global.io.emit("newBid"+auctionId,{price})
     res.status(200).json({
       message: "bid added",
     })

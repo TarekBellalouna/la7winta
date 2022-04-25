@@ -4,12 +4,15 @@ import PageTitle from "../../components/Common/PageTitle";
 import AuctionArea from "../../components/Auction/AuctionsArea";
 import axios from "axios";
 import Footer from "../../components/Footer/Footer";
+import { useHistory, useParams } from "react-router-dom";
 
 function Auctions() {
   const [auction, setAuction] = useState([]);
   const context = useContext(AuthContext);
 
 
+  
+  
 
   const editAuction = (
     auctionId,
@@ -49,7 +52,10 @@ function Auctions() {
       .catch((err) => console.log(err));
   };
 
-  
+  let history = useHistory();
+
+
+ 
 
   return (
     <div className="products-wrap">
@@ -57,6 +63,7 @@ function Auctions() {
       <AuctionArea
         auction={auction}
         editAuction={editAuction}
+
       />
       <Footer />
     </div>
