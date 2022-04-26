@@ -5,6 +5,7 @@ const path = require('path');
 const db = require("./config/db");
 
 const cors = require("cors");
+
 const productRoutes = require("./routings/product");
 const userRoutes = require("./routings/user");
 const orderRoutes = require("./routings/order");
@@ -18,6 +19,14 @@ const production = process.env.NODE_ENV === "production";
 require("dotenv").config();
 
 const app = express();
+
+const app = express();
+const http =require("http");
+const {Server}=require("socket.io");
+const cors =require("cors");
+
+require("dotenv").config();
+
 
 production && app.use(express.static(path.join(__dirname, "../client/build")));
 
@@ -44,3 +53,31 @@ app.use(cors());
 
 
 app.listen(process.env.PORT || 5000);
+app.use(cors());
+///////////Test
+
+////////////
+
+const server=http.createServer(app);
+
+global.io = new Server(server,{
+  cors:{
+    origin:"http://localhost:3000",
+    methods:["GET","POST"],
+  },
+
+
+});
+
+io.on("connection",(socket)=>{
+  console.log(`User connected: ${socket.id}`);
+
+  socket.on("ss",(data)=>{
+    socket.broadcast.emit("ee");
+  })
+})
+
+
+
+
+server.listen(process.env.PORT || 5000);

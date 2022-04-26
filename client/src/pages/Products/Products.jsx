@@ -76,6 +76,9 @@ function Products() {
       <PageTitle title="Products" />
       <ProductsArea
         products={products}
+
+        auctions={products}
+
         editProduct={editProduct}
         deleteProduct={deleteProduct}
       />

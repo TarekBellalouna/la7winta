@@ -6,7 +6,26 @@ import { useHistory, useParams } from "react-router-dom";
 import { Image } from "cloudinary-react";
 import CartContext from "../../contexts/cart-context";
 
-function AuctionsDetailsArea() {
+
+
+import socketIOClient from "socket.io-client";
+
+function AuctionsDetailsArea({auctions,   editAuction }) {
+
+  // Random component
+  const Completionist = () => <span>Expired!</span>;
+  
+  // Renderer callback with condition
+  const renderer = ({ hours, minutes, seconds, completed }) => {
+    if (completed) {
+      // Render a completed state
+      return <Completionist />;
+    } else {
+      // Render a countdown
+      return <span>{hours}:{minutes}:{seconds}</span>;
+    }
+  };
+
   const [auction, setAuction] = useState({});
   const [productName, setProductName] = useState("");
   const [description, setDescription] = useState("");
@@ -19,7 +38,23 @@ function AuctionsDetailsArea() {
   const { auctionId } = useParams();
   const context = useContext(CartContext);
 
+
   useEffect(() => {
+
+  const ENDPOINT = "http://localhost:5000/";
+
+
+  useEffect(() => {
+    console.log(Date.now())
+    const socket = socketIOClient(ENDPOINT);
+    console.log(auctionId)
+    socket.on("newBid"+auctionId,(a)=>{
+        console.log(a)
+        setcurrentPrice(a["price"])
+
+      })
+
+
     axios
       .get("/auction/fetch-auction/" + auctionId)
       .then((res) => {
@@ -38,9 +73,30 @@ function AuctionsDetailsArea() {
 
 
 
+
   const openDeleteModal = (currentPrice) => {
     setcurrentPrice(currentPrice);
   };
+
+  const openDeleteModal = (auctionId) => {
+    setAuction(auction);
+  };
+
+  
+  const openEditModal = (auction) => {
+    
+    setAuction(auction);
+    setProductName(auction.productName);
+    setDescription(auction.description);
+    setPrice(auction.Price);
+    setCategory(auction.catergory);
+    setDuration(auction.duration);
+    setcurrentPrice(auction.currentPrice);
+    
+  };
+
+ 
+
 
 
   
@@ -71,6 +127,8 @@ function AuctionsDetailsArea() {
 
   const [running, setRunning] = useState(false);
 
+  const [counter,setCounter] = useState();
+
   let history = useHistory();
 
   function updateCurrentPrice(){
@@ -88,16 +146,31 @@ function AuctionsDetailsArea() {
         } 
         ) .then((res) => res.json())
                 .then((resp) => {
+
                   setTimer(duration)
                     setcurrentPrice(currentPrice2)
                   
                   console.log(resp)
                 })
             
+
+                 // setTimer(duration)
+                  console.log("aaaaaaaaaaaaaaa")
+                    setcurrentPrice(currentPrice2)
+                    
+                //     const socket = io.connect("http://localhost:5000/");
+
+                // socket.emit("ss",{message:"aa"});
+                
+                  console.log(resp)
+                })
+              
+
          
 
   }
  
+
 
 
 
@@ -163,15 +236,24 @@ function AuctionsDetailsArea() {
       return deadline;
   }
 
+
   // We can use useEffect so that when the component
   // mount the timer will start as soon as possible
 
   // We put empty array to act as componentDid
   // mount only
   useEffect(() => {
+
       clearTimer(getDeadTime());
   }, []);
 
+
+
+    //  clearTimer(getDeadTime());
+  }, []);
+
+
+  
 
 
   return  (
@@ -183,13 +265,10 @@ function AuctionsDetailsArea() {
               <div className="main-products-image">
                 <div className="slider slider-for">
                   <div>
-                    {/* <Image
-                      key={product.image_public_id}
-                      cloudName={process.env.REACT_APP_CLOUDINARY_NAME}
-                      publicId={product.image_public_id}
-                      width="500"
-                      crop="scale"
-                    /> */}
+
+                  <img src={auction.image} alt={auction.name} width="500"  />
+
+
                   </div>
                 </div>
               </div>
@@ -210,8 +289,10 @@ function AuctionsDetailsArea() {
                 <hr></hr>
                
                <div className="countdown">
-               <span className="new-price" >Time Left: {timer}
-               </span>     
+
+               <span className="new-price" >Time Left: <Countdown date={ Date.now()+Date.parse(duration) *36000} renderer={renderer}/>
+               </span>
+
                 </div>
                 <hr></hr>
                 <div className="price">
@@ -262,6 +343,12 @@ function AuctionsDetailsArea() {
               </div>
             </div>
           </div>
+
+        </div><br></br>
+       <div className="center">
+      
+        &nbsp;
+        <button  className="default-btn" onClick={()=>openDeleteModal(auction)}>Delete</button>
         </div>
 
         <div className="products-details-tabs">

@@ -1,4 +1,5 @@
 
+
  
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
@@ -11,6 +12,7 @@ const path = require('path')
 const { fileURLToPath } = require('url')
 // import { fileURLToPath } from 'url';
 const nodemailer =require("nodemailer")
+
 
 const {
   validateRegisterInput,
@@ -243,6 +245,103 @@ exports.updateFile = async (req, res) => {
 //   }
 // };
 
+exports.postLogin = async (req, res) => {
+  try {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    const { errors, valid } = validateLoginInput(email, password);
+
+    if (!valid) {
+      return res.status(401).json({
+        errors,
+      });
+    }
+
+    const user = await User.findOne({
+      email,
+    });
+
+    if (!user) {
+      return res.status(401).json({
+        error: "Email or password isn't matched",
+      });
+    }
+
+    const isEqual = await bcrypt.compare(password, user.password);
+
+    if (!isEqual) {
+      return res.status(401).json({
+        error: "Email or password isn't matched",
+      });
+    }
+
+    const token = genAccTkn.generateAccessToken(user);
+    return res.status(200).json({
+      id: user.id,
+      token,
+      tokenExpiration: "24h",
+    });
+  } catch (err) {
+    res.status(500);
+  }
+};
+
+exports.postRegister = async (req, res) => {
+  try {
+    const name = req.body.name;
+    const username = req.body.username;
+    const email = req.body.email;
+    const phone = req.body.phone;
+    const password = req.body.password;
+
+    const { valid, errors } = validateRegisterInput(
+      name,
+      username,
+      email,
+      phone,
+      password
+    );
+
+    if (!valid) {
+      return res.status(401).json({
+        errors,
+      });
+    }
+
+    const existingUser = await User.findOne({
+      email,
+    });
+
+    if (existingUser) {
+      return res.status(401).json({
+        error: "Sorry email already registered",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    const user = new User({
+      name,
+      username,
+      email,
+      phone,
+      role: "user",
+      password: hashedPassword,
+      orders: [],
+    });
+
+    await user.save();
+
+    res.status(200).json({
+      message: "User created",
+    });
+  } catch (err) {
+    res.status(500);
+  }
+};
+
+
 exports.userDetails = async (req, res) => {
   try {
     const _id = req.params.id;
@@ -314,6 +413,7 @@ exports.passwordReset = async (req, res) => {
     res.status(500);
   }
 };
+
 
 exports.getUsers = async (req, res) => {
   const users = await User.find({});
@@ -392,3 +492,4 @@ module.exports.updateUserProfile = (async (req, res) => {
     throw new Error("User Not Found");
   }
 });
+

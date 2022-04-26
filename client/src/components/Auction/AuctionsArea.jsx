@@ -5,23 +5,48 @@ import axios from "axios";
 import authContext from "../../contexts/auth-context";
 import Countdown from "react-countdown";
 
+
+import AuctionsDetailsArea from "./AuctionsDetailsArea";
+
 function AuctionsArea({  history, editAuction ,page, pages, keyword,showQuickView}) {
-  const [auction, setAuction] = useState([]);
+  const [auction, setAuction] = useState([] );
+
   const [delauction, setdelAuction] = useState({});
   const [productName, setProductName] = useState("");
   const [description, setDescription] = useState("");
   const [Price, setPrice] = useState("");
   const [currentPrice, setcurrentPrice] = useState("");
+
   const [duration, setDuration] = useState("");
+
+  ////
+  const [data, setData] = useState(
+    [{
+_id:""
+
+
+
+    }]
+  )
+  ;
+  const [duration, setDuration]  = useState({
+    days: '',
+    hours: '',
+    minutes: '',
+    seconds: '',
+  });
+
   const [catergory, setCategory] = useState("");
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState({});
+
 
 
   const [days, setDays] = useState("");
   const [hours, setHours] = useState("");
   const [minutes, setMinutes] = useState("");
   const [seconds, setSeconds] = useState("");
+
 
 
   const [product_images, setProductImages] = useState("");
@@ -52,6 +77,7 @@ function AuctionsArea({  history, editAuction ,page, pages, keyword,showQuickVie
   const openDeleteModal = (auction) => {
     
   };
+
   const deleteAuction = (_id) => {
     axios
       .post(`/auction/delete-auction`, {
@@ -64,6 +90,7 @@ function AuctionsArea({  history, editAuction ,page, pages, keyword,showQuickVie
       })
       .catch((err) => console.log(err));
   };
+
   const openEditModal = (auction, imagePublicId) => {
     
     setAuction(auction);
@@ -75,7 +102,6 @@ function AuctionsArea({  history, editAuction ,page, pages, keyword,showQuickVie
     setcurrentPrice(auction.currentPrice);
     
   };
-
 
   const bidends = () => {
     let endTime = new Date("August 23, 2022 17:00:00 PDT");
@@ -110,11 +136,55 @@ function AuctionsArea({  history, editAuction ,page, pages, keyword,showQuickVie
   useEffect(() => {
     setInterval(() => {
       bidends();
+
+  useEffect(() => {
+    setInterval(() => {
+      
+
     }, 1000);
   }, []);
 
 
+  let expiredDate = duration
 
+// function getAuction(){
+// fetch("/auction/").then((res)=>{
+//   res.json().then((resp)=>{
+//     console.log(resp);
+
+//     setAuction(resp)
+
+// })
+// })
+// }
+
+function deleteAuction(id){
+  fetch(`/auction/delete-auction/`+id,{
+    method:'POST'
+  }).then((res)=>{
+    res.text().then((resp)=>{
+      console.log(resp);
+window.location.reload()
+  })
+  })
+}
+  // const Delete = async (id) => {
+  //   try{
+  //  await axios.delete("http://localhost:5000/auction/delete-auction/:id",{ params: {
+  //   "id":id
+  // }}).then(res => {
+  //    console.log(res);
+  //       setData(auction => auction.filter((auction)=> auction._id !==id ));
+  //       window.location.reload(false);
+  //       // if (res.data.message === "Successfully Deleted") {
+  //       //   setAuction(res.data.auction);
+  //       // }
+  //     }) }
+  //     catch (error) { 
+  //       console.log(error)
+  //       } 
+  //    }
+  
   
   // const handleChange = async e => {
 
@@ -191,12 +261,21 @@ function AuctionsArea({  history, editAuction ,page, pages, keyword,showQuickVie
                   <diV>
                  Duration <span>{auction.duration}</span>
                   </diV>   
+
                       
                 </div>
               </div>
               {/* test timer */}
 
 
+          
+                  <button   onClick={() => deleteAuction(auction._id)}>
+                       Delete
+                      </button>
+                </div>
+              </div>
+
+             
               
 
             </div>
