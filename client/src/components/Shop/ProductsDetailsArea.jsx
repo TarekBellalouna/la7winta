@@ -144,6 +144,7 @@ function ProductsDetailsArea() {
       })
       .catch((err) => console.log(err));
   }
+
   useEffect(() => {
     axios
       .get("/products/fetch-product/" + productId)
@@ -201,6 +202,7 @@ function ProductsDetailsArea() {
       .catch((err) => console.log(err));
   }, []);
 
+
   const addToCart = (product) => {
     let currentItem = {
       _id: product._id,
@@ -249,6 +251,7 @@ function ProductsDetailsArea() {
                     <i className="bx bxs-star"></i>
                     <i className="bx bxs-star"></i>
                     <i className="bx bxs-star"></i> */}
+                    
                   </div>
                 </div>
 
@@ -316,6 +319,7 @@ function ProductsDetailsArea() {
                   <button
                     type="submit"
                     className="default-btn mr-2"
+
                     onClick={() => addToCart(product)}
                   >
                     <i className="flaticon-shopping-cart"></i>
@@ -331,6 +335,7 @@ function ProductsDetailsArea() {
                     ChatBot
                     <span></span>
                   </button>
+
                 </div>
 
                 <div className="products-share">
@@ -469,6 +474,7 @@ function ProductsDetailsArea() {
                   </div>
                   <div className="side right">
                     <div>{Math.round(100*fivestar/nbRate)}%</div>
+
                   </div>
                   <div className="side">
                     <div>4 star</div>
@@ -480,6 +486,7 @@ function ProductsDetailsArea() {
                   </div>
                   <div className="side right">
                     <div>{Math.round(100*fourstar/nbRate)}%</div>
+
                   </div>
                   <div className="side">
                     <div>3 star</div>
@@ -491,6 +498,7 @@ function ProductsDetailsArea() {
                   </div>
                   <div className="side right">
                     <div>{Math.round(100*threestar/nbRate)}%</div>
+
                   </div>
                   <div className="side">
                     <div>2 star</div>
@@ -502,6 +510,7 @@ function ProductsDetailsArea() {
                   </div>
                   <div className="side right">
                     <div>{Math.round(100*twostar/nbRate)}%</div>
+
                   </div>
                   <div className="side">
                     <div>1 star</div>
@@ -513,6 +522,7 @@ function ProductsDetailsArea() {
                   </div>
                   <div className="side right">
                     <div>{Math.round(100*onestar/nbRate)}%</div>
+
                   </div>
                 </div>
               </div>
@@ -522,6 +532,7 @@ function ProductsDetailsArea() {
                 <form onSubmit={handleRating}>
                   <div className="review-title">
                     {/* <div className="rating">
+
                       <i className="bx bxs-star"></i>
                       <i className="bx bxs-star"></i>
                       <i className="bx bxs-star"></i>
@@ -612,12 +623,14 @@ function ProductsDetailsArea() {
                       </div>
                     ))}
 
+
                 <div className="review-form">
                   <h3>Write a Review</h3>
 
                   <form onSubmit={handleComment}>
                     <div className="row">
                       {/* <div className="col-lg-6 col-md-6">
+
                         <div className="form-group">
                           <input
                             type="text"
@@ -651,6 +664,7 @@ function ProductsDetailsArea() {
                             className="form-control"
                             ref={title}
                             required
+
                           />
                         </div>
                       </div>
@@ -666,6 +680,7 @@ function ProductsDetailsArea() {
                             className="form-control"
                             ref={contenue}
                             required
+
                           ></textarea>
                         </div>
                       </div>
