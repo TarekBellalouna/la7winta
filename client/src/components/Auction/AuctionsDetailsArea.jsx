@@ -154,18 +154,6 @@ function AuctionsDetailsArea({auctions,   editAuction }) {
   }, []);
 
 
-  const deleteAuction = (id) => {
-    axios
-      .delete(`/auction/delete-auction`+auctionId,history.push('/auction'), {
-        auctionId: id,
-      })
-      .then((res) => {
-        if (res.data.message === "Successfully Deleted") {
-          setAuction(res.data.products);
-        }
-      })
-      .catch((err) => console.log(err));
-  };
   
 
   return  (
@@ -253,9 +241,7 @@ function AuctionsDetailsArea({auctions,   editAuction }) {
           </div>
         </div><br></br>
        <div className="center">
-       <button type="submit" onClick={() => deleteAuction(auction)}>
-                       Delete
-                      </button>
+      
         &nbsp;
         <button  className="default-btn" onClick={()=>openDeleteModal(auction)}>Delete</button>
         </div>

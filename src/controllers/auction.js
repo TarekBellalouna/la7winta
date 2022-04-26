@@ -134,8 +134,8 @@ exports.fetchAuction = async (req, res) => {
 exports.deleteAuction = async (req, res) => {
   try {
 
-    const auctionId = req.params.id;
-    await Auction.deleteOne({ _id: auctionId });
+    const id = req.params.id;
+   // await Auction.deleteOne({ _id: id });
 
     const auction = await Auction.findOneAndDelete(req.params.id);
 

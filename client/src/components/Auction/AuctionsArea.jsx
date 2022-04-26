@@ -8,12 +8,22 @@ import Countdown from "react-countdown";
 import AuctionsDetailsArea from "./AuctionsDetailsArea";
 
 function AuctionsArea({  history, editAuction ,page, pages, keyword,showQuickView}) {
-  const [auction, setAuction] = useState([]);
+  const [auction, setAuction] = useState([] );
   const [delauction, setdelAuction] = useState({});
   const [productName, setProductName] = useState("");
   const [description, setDescription] = useState("");
   const [Price, setPrice] = useState("");
   const [currentPrice, setcurrentPrice] = useState("");
+  ////
+  const [data, setData] = useState(
+    [{
+_id:""
+
+
+
+    }]
+  )
+  ;
   const [duration, setDuration]  = useState({
     days: '',
     hours: '',
@@ -79,7 +89,44 @@ function AuctionsArea({  history, editAuction ,page, pages, keyword,showQuickVie
 
   let expiredDate = duration
 
+// function getAuction(){
+// fetch("/auction/").then((res)=>{
+//   res.json().then((resp)=>{
+//     console.log(resp);
 
+//     setAuction(resp)
+
+// })
+// })
+// }
+
+function deleteAuction(id){
+  fetch(`/auction/delete-auction/`+id,{
+    method:'POST'
+  }).then((res)=>{
+    res.text().then((resp)=>{
+      console.log(resp);
+window.location.reload()
+  })
+  })
+}
+  // const Delete = async (id) => {
+  //   try{
+  //  await axios.delete("http://localhost:5000/auction/delete-auction/:id",{ params: {
+  //   "id":id
+  // }}).then(res => {
+  //    console.log(res);
+  //       setData(auction => auction.filter((auction)=> auction._id !==id ));
+  //       window.location.reload(false);
+  //       // if (res.data.message === "Successfully Deleted") {
+  //       //   setAuction(res.data.auction);
+  //       // }
+  //     }) }
+  //     catch (error) { 
+  //       console.log(error)
+  //       } 
+  //    }
+  
   
   // const handleChange = async e => {
 
@@ -157,7 +204,9 @@ function AuctionsArea({  history, editAuction ,page, pages, keyword,showQuickVie
                  Duration <span>{auction.duration}</span>
                   </diV>   
           
-                      
+                  <button   onClick={() => deleteAuction(auction._id)}>
+                       Delete
+                      </button>
                 </div>
               </div>
 

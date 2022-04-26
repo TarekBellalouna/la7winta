@@ -42,6 +42,9 @@ app.use("/bid", bidRoutes);
 
 
 app.use(cors());
+///////////Test
+
+////////////
 
 const server=http.createServer(app);
 

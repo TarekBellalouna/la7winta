@@ -40,7 +40,7 @@ router.get("/", auctionController.fetchAuctions);
 router.get("/fetch-auction/:auctionId", auctionController.fetchAuction);
 router.post("/add-auction", upload.single("image"),auctionController.addAuction);
 router.post("/edit-auction", auctionController.editAuction);
-router.delete("/delete-auction/:auctionId", auctionController.deleteAuction);
+router.post("/delete-auction/:id", auctionController.deleteAuction);
 router.put("/addbid/:auctionId", auctionController.addbid);
 router.post("/upload", upload.single('image'), async (req, res) => {
     //console.log(req)
