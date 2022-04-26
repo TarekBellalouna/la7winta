@@ -6,7 +6,7 @@ const CouponSchema = new mongoose.Schema({
 
     code: {
         type: String,
-        required: true,
+        //required: true,
         },
 
     startDate: {
@@ -21,7 +21,7 @@ const CouponSchema = new mongoose.Schema({
 
     value: {
         type: Number,
-        required: true,
+        //required: true,
         },
         
 });

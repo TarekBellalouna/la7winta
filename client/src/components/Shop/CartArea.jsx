@@ -10,14 +10,59 @@ const KEY = "pk_test_51KhtEeEH3igSvawdpmzWGHuHvEuB0URizBnJ7Y7hm6vYH7weE9b7NGZfkh
 
 function CartArea() {
   const [stripeToken, setStripeToken] = useState(null);
+  const [couponcode, setCouponcode] = useState("");
+  const [coupon, setCoupon] = useState(0);
+  const [discount, setDiscount] = useState(0);
+  const [message, setMessage] = useState("");
+
+const handleChange = (e) => setCouponcode(e.target.value)
+
 
   const onToken = (token) =>{
       console.log(token);
       setStripeToken(token);
   }
   
+  /*useEffect(()=>
+  {
+    if(couponcode!="")
+    try{
+    axios.post('http://localhost:5000/coupon/getCoupon/',{code : couponcode,}).then((response)=>{
+      const res = response.data;
+      //console.log(res[0].value);
+      setCoupon(res[0].value)
+    })
+  }catch(err){
+    console.log("err coupon", err);
+    setCoupon(0);
+  }
+
+
+  },[couponcode])
+  */
+ 
+ 
+
+const applyCoupon = (e)=>{
+  e.preventDefault();
+  axios.post('http://localhost:5000/coupon/getCoupon/',{code : couponcode,}).then((response)=>{
+    const res = response.data;
+    //console.log("res[0].value: ", res[0].value);
+    if(res[0] != null)
+      setCoupon(res[0].value)
+
+    else {setMessage("This code is invalid.");
+    setTimeout(() => { setMessage("");}, 1200);
+  }
+    //console.log("coupon : ", coupon);
+
+  })  
+
   
-  
+}
+
+
+
   useEffect(()=>{
     const makeRequest = async ()=>{
       try{
@@ -25,7 +70,7 @@ function CartArea() {
           tokenId:stripeToken.id,
           amount: 100,
         })//.then((response)=>{console.log(response);})
-        console.log(res,"AAAAAAAAA");
+        console.log(res,"works");
       }catch(err){
         console.log("error react: ",err)
       }
@@ -167,8 +212,31 @@ function CartArea() {
                         placeholder="Coupon code"
                         name="coupon-code"
                         id="coupon-code"
+                        value={couponcode}
+                        onChange={handleChange}
                       />
-                      <button type="submit">Apply Coupon</button>
+                     
+                      <button onClick={applyCoupon}>Apply Coupon</button>
+
+                      <br></br>
+
+                     {coupon !== 0 && (
+          <div
+            className="alert alert-success"
+            role="alert"
+          >
+
+            -{coupon} %
+          </div>
+        )}
+        {message !== "" && (
+          <div
+            className="alert alert-danger"
+            role="alert"
+          >
+            {message}
+          </div>
+        )}
                     </div>
                   </div>
                 </div>
@@ -188,32 +256,19 @@ function CartArea() {
                     {(context.cartItems &&
                       context.cartItems.reduce((count, curItem) => {
                         return (
-                          count +
+                          (count +
                           parseInt(curItem.price) *
-                            parseInt(curItem.quantity || 0)
+                            parseInt(curItem.quantity || 0)) 
+                           
                         );
                       }, 0)) ||
                       0}
                   </span>
                 </li>
                 <li>
-                  Shipping <span>$30.00</span>
+                  Coupon <span>{coupon}%</span>
                 </li>
-                <li>
-                  Total{" "}
-                  <span>
-                    $
-                    {((context.cartItems &&
-                      context.cartItems.reduce((count, curItem) => {
-                        return (
-                          count +
-                          parseInt(curItem.price) *
-                            parseInt(curItem.quantity || 0)
-                        );
-                      }, 0)) ||
-                      0) + 30}
-                  </span>
-                </li>
+                
                 <li>
                   Payable Total{" "}
                   <span>
@@ -221,12 +276,16 @@ function CartArea() {
                     {((context.cartItems &&
                       context.cartItems.reduce((count, curItem) => {
                         return (
-                          count +
+                          (count +
                           parseInt(curItem.price) *
-                            parseInt(curItem.quantity || 0)
+                            parseInt(curItem.quantity || 0)) 
+                            - 
+                            coupon * (
+                              parseInt(curItem.price) *
+                                parseInt(curItem.quantity || 0)) /100
                         );
                       }, 0)) ||
-                      0) + 30}
+                      0)}
                   </span>
                 </li>
               </ul>
@@ -255,8 +314,8 @@ function CartArea() {
               0) + 30 * 100}
             token={onToken}
             stripeKey={KEY}
-            >
-              <button style={{ cursor: "pointer" }} className="default-btn">Use Card</button>
+            >              <button style={{ cursor: "pointer" }} className="default-btn">Use Card</button>
+
             </StripeCheckout>
 
 

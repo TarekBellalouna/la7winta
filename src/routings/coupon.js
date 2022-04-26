@@ -10,12 +10,15 @@ router.post('/addCoupon', async(req, res)=> {
     const type = req.body.type;
     const code = req.body.code;
     const value = req.body.value;
+    console.log("req.body: ", req.body);
 
-    const coupon = new CouponModel({type: type, code: code, value});
+    const coupon = new CouponModel({type: type, code: code, value: value});
 
     try {
         await coupon.save();
         console.log("coupon saved, Ela.");
+        console.log(coupon);
+
         res.send("coupon saved.");
     }catch(err) {
         console.log(err)
@@ -52,13 +55,26 @@ router.put('/updateCoupon', async(req, res)=> {
 
 });
 
+router.post('/getCoupon', async(req, res)=> {
+    CouponModel.find(
+        {//type : req.body.type,
+        //value : req.body.value,
+        code:req.body.code
+    }, (err, result)=>{
+        if(err){
+            res.send(err)
+        }
+        res.send(result);
+    })
+});
+
 //DELETE
 
-router.delete('/deleteCoupon/:id', async(req, res)=> {
-    const id = req.params.id;
+router.get('/deleteCoupon/:code', async(req, res)=> {
+    const code = req.params.code;
     //res.send(id);
-    await CouponModel.findByIdAndRemove(id).exec();
-    res.send('deleted.')
+    await CouponModel.findOneAndDelete({code:code}).exec();
+    res.send('deleted by code.')
 
 });
 
