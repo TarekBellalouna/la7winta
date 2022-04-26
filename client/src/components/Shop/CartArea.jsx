@@ -48,10 +48,18 @@ const applyCoupon = (e)=>{
   axios.post('http://localhost:5000/coupon/getCoupon/',{code : couponcode,}).then((response)=>{
     const res = response.data;
     //console.log("res[0].value: ", res[0].value);
-    if(res[0] != null)
-      setCoupon(res[0].value)
+    if(res[0] != null && res[0].isUsed === "no")
+      {setCoupon(res[0].value);
 
-    else {setMessage("This code is invalid.");
+        axios.put(`http://localhost:5000/coupon/${res[0]._id}/use`);
+      }
+
+    else if(res[0] == null)
+    {setMessage("This code is invalid.");
+    setTimeout(() => { setMessage("");}, 1200);
+  }
+  else if(res[0].isUsed === "yes")
+    {setMessage("This code has been used.");
     setTimeout(() => { setMessage("");}, 1200);
   }
     //console.log("coupon : ", coupon);
@@ -297,21 +305,29 @@ const applyCoupon = (e)=>{
             description={`Your total is $ ${((context.cartItems &&
               context.cartItems.reduce((count, curItem) => {
                 return (
-                  count +
+                  (count +
                   parseInt(curItem.price) *
-                    parseInt(curItem.quantity || 0)
+                    parseInt(curItem.quantity || 0)) 
+                    - 
+                    coupon * (
+                      parseInt(curItem.price) *
+                        parseInt(curItem.quantity || 0)) /100
                 );
               }, 0)) ||
-              0) + 30}`}
-            amount={((context.cartItems &&
+              0)}`}
+            /*amount={((context.cartItems &&
               context.cartItems.reduce((count, curItem) => {
                 return (
-                  count +
+                  (count +
                   parseInt(curItem.price) *
-                    parseInt(curItem.quantity || 0) * 100
+                    parseInt(curItem.quantity || 0)) 
+                    - 
+                    coupon * (
+                      parseInt(curItem.price) *
+                        parseInt(curItem.quantity || 0))
                 );
               }, 0)) ||
-              0) + 30 * 100}
+              0)}*/
             token={onToken}
             stripeKey={KEY}
             >              <button style={{ cursor: "pointer" }} className="default-btn">Use Card</button>

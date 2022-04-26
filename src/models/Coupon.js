@@ -23,6 +23,11 @@ const CouponSchema = new mongoose.Schema({
         type: Number,
         //required: true,
         },
+    isUsed: {
+        type: String,
+        default: "no",
+
+    }
         
 });
 

@@ -38,20 +38,23 @@ router.get('/readCoupon', async(req, res)=> {
 });
 //UPDATE
 
-router.put('/updateCoupon', async(req, res)=> {
+router.put('/:id/use', async(req, res)=> {
     
-    const value = req.body.value;
-    const id = req.body.id;
-    try {
-        await CouponModel.findById(id, (err, updatedCoupon)=>{
-            updatedCoupon.value = value;
-            updatedCoupon.save();
-        });
-        console.log("coupon edited, Ela.");
-        res.send("coupon edited.");
-    }catch(err) {
-        console.log(err)
-    }
+    const coupon = await CouponModel.findById(req.params.id)
+
+  if (coupon) {
+    coupon.isUsed = "yes"
+
+    const updatedCoupon = await coupon.save()
+
+    res.json(updatedCoupon)
+    console.log(updatedCoupon);
+
+        res.send("coupon used.");
+  } else {
+    res.status(404)
+    throw new Error('Coupon not found')
+  }
 
 });
 
