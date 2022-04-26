@@ -5,6 +5,9 @@ import { hot } from 'react-hot-loader/root';
 import { useHistory, useParams } from "react-router-dom";
 import { Image } from "cloudinary-react";
 import CartContext from "../../contexts/cart-context";
+
+
+
 import socketIOClient from "socket.io-client";
 
 function AuctionsDetailsArea({auctions,   editAuction }) {
@@ -22,6 +25,7 @@ function AuctionsDetailsArea({auctions,   editAuction }) {
       return <span>{hours}:{minutes}:{seconds}</span>;
     }
   };
+
   const [auction, setAuction] = useState({});
   const [productName, setProductName] = useState("");
   const [description, setDescription] = useState("");
@@ -33,6 +37,10 @@ function AuctionsDetailsArea({auctions,   editAuction }) {
   const [category, setCategory] = useState("");
   const { auctionId } = useParams();
   const context = useContext(CartContext);
+
+
+  useEffect(() => {
+
   const ENDPOINT = "http://localhost:5000/";
 
 
@@ -46,6 +54,7 @@ function AuctionsDetailsArea({auctions,   editAuction }) {
 
       })
 
+
     axios
       .get("/auction/fetch-auction/" + auctionId)
       .then((res) => {
@@ -58,6 +67,16 @@ function AuctionsDetailsArea({auctions,   editAuction }) {
       })
       .catch((err) => console.log(err));
   }, []);
+
+
+
+
+
+
+
+  const openDeleteModal = (currentPrice) => {
+    setcurrentPrice(currentPrice);
+  };
 
   const openDeleteModal = (auctionId) => {
     setAuction(auction);
@@ -77,6 +96,7 @@ function AuctionsDetailsArea({auctions,   editAuction }) {
   };
 
  
+
 
 
   
@@ -106,7 +126,9 @@ function AuctionsDetailsArea({auctions,   editAuction }) {
   // };
 
   const [running, setRunning] = useState(false);
+
   const [counter,setCounter] = useState();
+
   let history = useHistory();
 
   function updateCurrentPrice(){
@@ -124,6 +146,14 @@ function AuctionsDetailsArea({auctions,   editAuction }) {
         } 
         ) .then((res) => res.json())
                 .then((resp) => {
+
+                  setTimer(duration)
+                    setcurrentPrice(currentPrice2)
+                  
+                  console.log(resp)
+                })
+            
+
                  // setTimer(duration)
                   console.log("aaaaaaaaaaaaaaa")
                     setcurrentPrice(currentPrice2)
@@ -135,6 +165,7 @@ function AuctionsDetailsArea({auctions,   editAuction }) {
                   console.log(resp)
                 })
               
+
          
 
   }
@@ -144,17 +175,86 @@ function AuctionsDetailsArea({auctions,   editAuction }) {
 
 
 
+
+  const Ref = useRef(null);
+  
+  // The state for our timer
+  const [timer, setTimer] = useState( );
+
+
+  const getTimeRemaining = (e) => {
+      const total = Date.parse(e) - Date.parse(new Date());
+      const seconds = Math.floor((total / 1000) % 60);
+      const minutes = Math.floor((total / 1000 / 60) % 60);
+      const hours = Math.floor((total / 1000 * 60 * 60) % 24);
+      return {
+          total, hours, minutes, seconds
+      };
+  }
+
+
+  const startTimer = (e) => {
+      let { total, hours, minutes, seconds } 
+                  = getTimeRemaining(e);
+      if (total >= 0) {
+
+          // update the timer
+          // check if less than 10 then we need to 
+          // add '0' at the begining of the variable
+          setTimer(
+              (hours > 9 ? hours : '0' + hours) + ':' +
+              (minutes > 9 ? minutes : '0' + minutes) + ':'
+              + (seconds > 9 ? seconds : '0' + seconds)
+          )
+      }
+  }
+
+
+  const clearTimer = (e) => {
+
+      // If you adjust it you should also need to
+      // adjust the Endtime formula we are about
+      // to code next    
+      setTimer('00:00:00');
+
+      // If you try to remove this line the 
+      // updating of timer Variable will be
+      // after 1000ms or 1sec
+      if (Ref.current) clearInterval(Ref.current);
+      const id = setInterval(() => {
+          startTimer(e);
+      }, 1000)
+      Ref.current = id;
+  }
+
+  const getDeadTime = () => {
+      let deadline = new Date();
+
+      // This is where you need to adjust if 
+      // you entend to add more time
+      deadline.setHours(deadline.getHours() + 2);
+      return deadline;
+  }
+
+
   // We can use useEffect so that when the component
   // mount the timer will start as soon as possible
 
   // We put empty array to act as componentDid
   // mount only
   useEffect(() => {
+
+      clearTimer(getDeadTime());
+  }, []);
+
+
+
     //  clearTimer(getDeadTime());
   }, []);
 
 
   
+
 
   return  (
     <section className="products-details-area ptb-50">
@@ -165,7 +265,9 @@ function AuctionsDetailsArea({auctions,   editAuction }) {
               <div className="main-products-image">
                 <div className="slider slider-for">
                   <div>
+
                   <img src={auction.image} alt={auction.name} width="500"  />
+
 
                   </div>
                 </div>
@@ -187,8 +289,10 @@ function AuctionsDetailsArea({auctions,   editAuction }) {
                 <hr></hr>
                
                <div className="countdown">
+
                <span className="new-price" >Time Left: <Countdown date={ Date.now()+Date.parse(duration) *36000} renderer={renderer}/>
                </span>
+
                 </div>
                 <hr></hr>
                 <div className="price">
@@ -239,12 +343,14 @@ function AuctionsDetailsArea({auctions,   editAuction }) {
               </div>
             </div>
           </div>
+
         </div><br></br>
        <div className="center">
       
         &nbsp;
         <button  className="default-btn" onClick={()=>openDeleteModal(auction)}>Delete</button>
         </div>
+
         <div className="products-details-tabs">
           <ul className="nav nav-tabs" id="myTab" role="tablist">
             <li className="nav-item">

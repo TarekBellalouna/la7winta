@@ -23,7 +23,7 @@ router.post('/new',upload.single("image"), async (req, res) => {
             location:req.body.location,
             Startdate: req.body.Startdate,
             Enddate: req.body.Enddate,
-            user: req.body.user, 
+            user:req.body.user, 
             avatar: result.secure_url,
             cloudinary_id: result.public_id,
         }
@@ -37,5 +37,5 @@ router.post('/new',upload.single("image"), async (req, res) => {
   });
 
 /* UPDATE BOOK */
-router.put("/update/:id" , EventController.put);
+router.put("update/:id" , EventController.put);
 module.exports = router;

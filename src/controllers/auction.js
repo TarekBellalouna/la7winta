@@ -140,6 +140,7 @@ exports.deleteAuction = async (req, res) => {
     const auction = await Auction.findOneAndDelete(req.params.id);
 
     return res.status(200).json({ message: "Successfully Deleted" });
+
   } catch (err) {
     res.status(500);
   }
@@ -147,6 +148,7 @@ exports.deleteAuction = async (req, res) => {
 
 
 exports.editAuction = async (req, res) => {
+
 
   try {    const id = req.params.auctionId;
 
@@ -172,7 +174,9 @@ exports.editAuction = async (req, res) => {
   
     const image_public_id = req.body.image_public_id;
 
+
     await Auction.findByIdAndUpdate(id)(
+
       { _id: auctionId },
       {
         $set: {
@@ -220,6 +224,7 @@ exports.addbid = async (req, res) => {
 auctionId=req.params.auctionId;
   
 
+
      await Auction.updateOne(
       { _id: auctionId },
       {
@@ -230,10 +235,7 @@ auctionId=req.params.auctionId;
         },
       }
     );
-    console.log(auctionId)
-    const auction = await Auction.findById(auctionId)
-    const price = auction.currentPrice
-    global.io.emit("newBid"+auctionId,{price})
+
     res.status(200).json({
       message: "bid added",
     })

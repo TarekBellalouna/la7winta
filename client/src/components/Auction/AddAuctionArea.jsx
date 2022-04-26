@@ -13,7 +13,9 @@ function AddAuctionArea() {
   const [image, setImage] = useState("");
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState();
+
   const [auctionStarted, setAuctionstarted] = useState(false);
+
   let history = useHistory();
 
 
@@ -43,7 +45,9 @@ function AddAuctionArea() {
                       setPrice("");
                       setDuration("");
                       setcurrentPrice("");
+
                       setAuctionstarted(true);
+
                       setErrors('');
                      
                     }
